@@ -5,7 +5,7 @@ from temporalio.client import Client
 from temporalio.worker import Worker
 from dataclasses import dataclass
 from datetime import timedelta
-import logging, uuid, time
+import logging, uuid, time, textwrap
 
 
 @dataclass
@@ -21,6 +21,18 @@ class SentimentWorkflow:
     async def run(self, row: SentimentInput):  
         with workflow.unsafe.imports_passed_through():
             import analyze as analyzer
+        
+        try:
+            item= row.item
+            star = row.rating
+            title = row.title
+            content = row.content
+            print("Item: %s, Review: %s, %s, %s" % (item, star, title, textwrap.shorten(content, width=128)))
+        except Exception as e:
+            print("Item: %s, Pandas row exception: %s" % e)
+            return 0
+    
+
         stars =  await workflow.execute_activity(
             analyzer.star_rating,
             row.rating,
@@ -28,12 +40,12 @@ class SentimentWorkflow:
         )
         title =  await workflow.execute_activity(
             analyzer.sentiment,
-            row.title,
+            title,
             start_to_close_timeout=timedelta(seconds=20),
         )
         content =  await workflow.execute_activity(
             analyzer.sentiment,
-            row.content,
+            content,
             start_to_close_timeout=timedelta(seconds=20),
         )
         ratings = [stars, title, content]
@@ -47,7 +59,7 @@ class SentimentWorkflow:
             rating,
             start_to_close_timeout=timedelta(seconds=20),
         )
-        print("Item: %s, computing weighted review vector: %s, as: %s" % (row.item, ratings, verdict) )
+        print("Item: %s, Computed weighted review vector: %s, as: %s" % (row.item, ratings, verdict) )
         return rating
 
 
@@ -71,11 +83,19 @@ async def runner(item: str):
         try:
             flowid = item+"-"+str(uuid.uuid4())[:8]
             df = scraper.scrape(item)
-            for row in df.itertuples(index=False):               
+            for row in df.itertuples(index=False):
+                if row.title:
+                    title = str(row.title).strip()
+                else:
+                    continue
+                if row.content:
+                    content = str(row.content).strip()
+                else:
+                    content = "No Description"
                 bundle = SentimentInput(item=item, 
                                         rating=row.rating,
-                                        title=row.title,
-                                        content=row.content )
+                                        title=title,
+                                        content=content)
                 rating = await client.execute_workflow(
                     SentimentWorkflow.run,
                     bundle,

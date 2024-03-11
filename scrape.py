@@ -6,7 +6,6 @@ import pandas as pd
 import os
 from dataclasses import dataclass
 
-
 @dataclass
 class ScrapedDataFrames:
     item: str
@@ -28,7 +27,7 @@ custom_headers = {
 }
 
 def get_soup(url):
-    response = requests.get(url, headers=custom_headers, auth=(os.getenv('bbertka@gmail.com'), os.getenv('ofelia213')) )
+    response = requests.get(url, headers=custom_headers, auth=(os.getenv('AMAZON_USERNAME'), os.getenv('AMAZON_PASSWORD')) )
     if response.status_code != 200:
         print("Error in getting webpage")
         exit(-1)
@@ -76,7 +75,6 @@ def get_reviews(soup):
         scraped_reviews.append(r)
 
     return scraped_reviews
-
 
 def scrape(item):
     page = 1
