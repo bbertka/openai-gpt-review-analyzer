@@ -8,6 +8,13 @@ from datetime import timedelta
 import logging, uuid, time, textwrap, os
 
 
+temporal_url = os.getenv("TEMPORAL_URL")
+temporal_port = os.getenv("TEMPORAL_PORT")
+
+#For testing
+#temporal_url = "temporal.home.lab"
+#temporal_port = "7233"
+
 @dataclass
 class SentimentInput:
     item: str
@@ -69,9 +76,8 @@ async def runner(item: str):
         import scrape as scraper
     #logging.basicConfig(level=logging.INFO)
 
-    temporal_url = os.getenv("TEMPORAL_URL")
-    temporal_port = os.getenv("TEMPORAL_PORT")
-    connection_str = temporal_url+":"+temporal_port
+    connection_str = "%s:%s" % (temporal_url, temporal_port)
+    print(connection_str)
     client = await Client.connect(connection_str)
     async with Worker(
         client,
