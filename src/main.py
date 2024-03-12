@@ -5,7 +5,7 @@ from temporalio.client import Client
 from temporalio.worker import Worker
 from dataclasses import dataclass
 from datetime import timedelta
-import logging, uuid, time, textwrap
+import logging, uuid, time, textwrap, os
 
 
 @dataclass
@@ -120,7 +120,7 @@ async def runner(item: str):
 if __name__ == '__main__':
     with workflow.unsafe.imports_passed_through():
         from routes import CFWorker
-    worker = CFWorker(port=8000)
+    worker = CFWorker(port=os.getenv("PORT"))
     worker.start()
     print("Review Analyzer has started successfully!")
     while True:
