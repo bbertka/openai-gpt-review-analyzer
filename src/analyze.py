@@ -5,7 +5,7 @@ from temporalio import activity
 @activity.defn
 async def sentiment(text):
 	""" Quick and Dirty Sentiment """
-	#activity.logger.info("Sentiment activity with parameter %s" % text) 
+	#activity.logger.info("Sentiment activity with parameter %s" % text)
 
 	value = 'Neutral'
 	sentiment = 0
@@ -21,9 +21,9 @@ async def sentiment(text):
 
 @activity.defn
 async def star_rating(stars):
-	#activity.logger.info("Star-rating activity with parameter %s" % stars) 
+	#activity.logger.info("Star-rating activity with parameter %s" % stars)
 	rating = float(stars)
-	
+
 	if rating >= 4:
 		return "Good"
 	elif rating >= 2.5:
@@ -33,7 +33,7 @@ async def star_rating(stars):
 
 @activity.defn
 async def quantify(ratings):
-	#activity.logger.info("Quantify activity with parameter %s" % ratings) 
+	#activity.logger.info("Quantify activity with parameter %s" % ratings)
 	#weighted vector of ratings [stars, title, content]
 	weights =[.40, .20, .40]
 	wv = [0.0,0.0,0.0]
@@ -46,7 +46,7 @@ async def quantify(ratings):
 		elif ratings[i] == "Bad":
 			scores[i] = 0
 		wv[i] = scores[i]*weights[i]
-	
+
 	total= 0.0
 	for i in range(3):
 		total = total+wv[i]
@@ -54,7 +54,7 @@ async def quantify(ratings):
 
 @activity.defn
 async def interprete(rating):
-	#activity.logger.info("Interprete activity with parameter %s" % rating) 
+	#activity.logger.info("Interprete activity with parameter %s" % rating)
 	grade = "A"
 	if rating >= 97:
 		grade = "A+"

@@ -10,13 +10,13 @@ from dataclasses import dataclass
 class ScrapedDataFrames:
     item: str
     df: pd.DataFrame
-    
+
     def getdf(self):
         return self.df
-    
+
     def getitem(self):
         return self.item
-    
+
 
 custom_headers = {
     "Accept-language": "en-GB,en;q=0.9",

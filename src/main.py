@@ -18,10 +18,10 @@ class SentimentInput:
 @workflow.defn
 class SentimentWorkflow:
     @workflow.run
-    async def run(self, row: SentimentInput):  
+    async def run(self, row: SentimentInput):
         with workflow.unsafe.imports_passed_through():
             import analyze as analyzer
-        
+
         try:
             item= row.item
             star = row.rating
@@ -31,7 +31,7 @@ class SentimentWorkflow:
         except Exception as e:
             print("Item: %s, Pandas row exception: %s" % e)
             return 0
-    
+
 
         stars =  await workflow.execute_activity(
             analyzer.star_rating,
@@ -73,9 +73,9 @@ async def runner(item: str):
         client,
         task_queue="sentiment-task-queue",
         workflows=[SentimentWorkflow],
-        activities=[analyzer.star_rating, 
-                    analyzer.sentiment, 
-                    analyzer.quantify, 
+        activities=[analyzer.star_rating,
+                    analyzer.sentiment,
+                    analyzer.quantify,
                     analyzer.interprete],
     ):
         i = 0
@@ -92,7 +92,7 @@ async def runner(item: str):
                     content = str(row.content).strip()
                 else:
                     content = "No Description"
-                bundle = SentimentInput(item=item, 
+                bundle = SentimentInput(item=item,
                                         rating=row.rating,
                                         title=title,
                                         content=content)
