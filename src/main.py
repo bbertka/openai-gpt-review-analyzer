@@ -8,11 +8,11 @@ from datetime import timedelta
 import logging, uuid, time, textwrap, os
 
 
-temporal_url = os.getenv("TEMPORAL_URL")
+temporal_url = os.getenv("TEMPORAL_HOST")
 temporal_port = os.getenv("TEMPORAL_PORT")
 
 #For testing
-#temporal_url = "temporal.home.lab"
+#temporal_host = "temporal.home.lab"
 #temporal_port = "7233"
 
 @dataclass
@@ -76,8 +76,7 @@ async def runner(item: str):
         import scrape as scraper
     #logging.basicConfig(level=logging.INFO)
 
-    connection_str = "%s:%s" % (temporal_url, temporal_port)
-    print(connection_str)
+    connection_str = "%s:%s" % (temporal_host, temporal_port)
     client = await Client.connect(connection_str)
     async with Worker(
         client,

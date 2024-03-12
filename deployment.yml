@@ -24,10 +24,10 @@ spec:
           value: "changeme"
         - name: AMAZON_PASSWORD
           value: "changeme"
-        - name: TEMPORAL_URL
+        - name: TEMPORAL_HOST
           value: "192.168.1.110"
         - name: TEMPORAL_PORT
-          value: 7233
+          value: "7233"
 
 ---
 apiVersion: v1
