@@ -12,7 +12,7 @@ temporal_host = os.getenv("TEMPORAL_HOST")
 temporal_port = os.getenv("TEMPORAL_PORT")
 
 #For testing
-#temporal_host = "temporal.home.lab"
+#temporal_host = "192.168.1.114"
 #temporal_port = "7233"
 
 @dataclass
@@ -77,6 +77,9 @@ async def runner(item: str):
     #logging.basicConfig(level=logging.INFO)
 
     connection_str = "%s:%s" % (temporal_host, temporal_port)
+
+    print(connection_str)
+
     client = await Client.connect(connection_str)
     async with Worker(
         client,

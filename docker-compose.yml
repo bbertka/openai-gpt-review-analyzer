@@ -8,5 +8,5 @@ services:
     environment:
       AMAZON_USERNAME: changeme
       AMAZON_PASSWORD: changeme
-      TEMPORAL_HOST: 192.168.1.110
+      TEMPORAL_HOST: 192.168.1.114
       TEMPORAL_PORT: 7233
