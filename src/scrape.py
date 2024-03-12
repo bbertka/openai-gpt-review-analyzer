@@ -1,22 +1,18 @@
-### From https://oxylabs.io/blog/how-to-scrape-amazon-reviews ####
-
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
-import os
-from dataclasses import dataclass
+import os, uuid
+from temporalio import activity
+import redis, json
 
-@dataclass
-class ScrapedDataFrames:
-    item: str
-    df: pd.DataFrame
+#redis_host = os.getenv("REDIS_HOST")
+#redis_port = int(os.getenv("REDIS_PORT"))
+#redis_db = os.getenv("REDIS_DB")
 
-    def getdf(self):
-        return self.df
-
-    def getitem(self):
-        return self.item
-
+#For testing
+redis_host = "192.168.1.110"
+redis_port = 6379
+redis_db = "0"
 
 custom_headers = {
     "Accept-language": "en-GB,en;q=0.9",
@@ -76,7 +72,8 @@ def get_reviews(soup):
 
     return scraped_reviews
 
-def scrape(item):
+@activity.defn
+async def scrape(item):
     page = 1
     dataframes = pd.DataFrame()
     while True:
@@ -90,4 +87,24 @@ def scrape(item):
         dataframes = pd.concat([dataframes,df], ignore_index=True)
         page = page+1
 
-    return dataframes
+    r = redis.Redis(host=redis_host, port=redis_port, db=redis_db, decode_responses=True)
+    itemkeys = list()
+    for row in dataframes.itertuples(index=False):
+        try:
+            star = row.rating
+            title = row.title
+            content = row.content
+            key = item+"-"+str(uuid.uuid4())[:8]
+            data = {
+                "star": star,  
+                "title": title,  
+                "content": content  
+            }
+            value_str = json.dumps(data)
+            r.set(key, value_str)
+            itemkeys.append(key)
+        except Exception as e:
+            print("Item: %s, Pandas row exception: %s" % e)
+            return 0
+
+    return itemkeys
