@@ -25,7 +25,7 @@ spec:
         - name: AMAZON_PASSWORD
           value: "changeme"
         - name: TEMPORAL_URL
-          value: "http://192.168.1.110"
+          value: "192.168.1.110"
         - name: TEMPORAL_PORT
           value: 7233
 

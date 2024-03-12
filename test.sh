@@ -6,5 +6,5 @@ while IFS= read -r item; do
   encoded_item=$(jq -nr --arg item "$item" '$item|@uri')
   
   # Execute the curl command
-  curl "http://127.0.0.1:8000/sentiment?item=${encoded_item}"
+  curl "http://192.168.1.110:5000/sentiment?item=${encoded_item}"
 done < ./items.txt

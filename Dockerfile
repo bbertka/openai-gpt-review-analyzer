@@ -20,7 +20,7 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 # Copy the Flask application files into the container
 COPY src/*.py ./
 
-ENV TEMPORAL_URL http://temporal.home.lab
+ENV TEMPORAL_HOST 192.168.1.110
 ENV TEMPORAL_PORT 7233
 ENV AMAZON_USERNAME changeme
 ENV AMAZON_PASSWORD changeme
