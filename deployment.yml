@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: temporal-review-analyzer-deployment
+  labels:
+    app: temporal-review-analyzer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: temporal-review-analyzer
+  template:
+    metadata:
+      labels:
+        app: temporal-review-analyzer
+    spec:
+      containers:
+      - name: temporal-review-analyzer
+        image: bbertka/temporal-review-analyzer-arm64:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: AMAZON_USERNAME
+          value: "changeme"
+        - name: AMAZON_PASSWORD
+          value: "changeme"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: temporal-review-analyzer-service
+spec:
+  selector:
+    app: temporal-review-analyzer
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+  type: LoadBalancer
