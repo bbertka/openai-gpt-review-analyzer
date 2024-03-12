@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  flask-app:
+    image: bbertka/temporal-review-analyzer:latest
+    ports:
+      - "5000:5000"
+    environment:
+      AMAZON_USERNAME: changeme
+      AMAZON_PASSWORD: changeme
