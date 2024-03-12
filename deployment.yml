@@ -24,7 +24,10 @@ spec:
           value: "changeme"
         - name: AMAZON_PASSWORD
           value: "changeme"
-
+        - name: TEMPORAL_URL
+        - value: http://temporal.home.lab
+        - name: TEMPORAL_PORT
+        - value: 7233
 ---
 apiVersion: v1
 kind: Service
