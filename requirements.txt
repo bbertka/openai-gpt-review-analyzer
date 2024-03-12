@@ -1,5 +1,4 @@
 temporalio
-dataclasses
 requests
 bs4
 pandas
@@ -7,3 +6,4 @@ textblob
 asyncio
 Flask
 lxml
+redis

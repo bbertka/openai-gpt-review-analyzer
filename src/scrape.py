@@ -5,14 +5,15 @@ import os, uuid
 from temporalio import activity
 import redis, json
 
-#redis_host = os.getenv("REDIS_HOST")
-#redis_port = int(os.getenv("REDIS_PORT"))
-#redis_db = os.getenv("REDIS_DB")
+#For Docker/Kubernetes
+redis_host = os.getenv("REDIS_HOST")
+redis_port = int(os.getenv("REDIS_PORT"))
+redis_db = os.getenv("REDIS_DB")
 
 #For testing
-redis_host = "192.168.1.110"
-redis_port = 6379
-redis_db = "0"
+#redis_host = "192.168.1.110"
+#redis_port = 6379
+#redis_db = "0"
 
 custom_headers = {
     "Accept-language": "en-GB,en;q=0.9",

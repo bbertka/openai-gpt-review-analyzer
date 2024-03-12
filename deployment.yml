@@ -28,6 +28,13 @@ spec:
           value: "192.168.1.114"
         - name: TEMPORAL_PORT
           value: "7233"
+        - name: REDIS_HOST
+          value: "192.168.1.110"
+        - name: REDIS_PORT
+          value: "6379"
+        - name: REDIS_DB
+          value: "0"
+
 
 ---
 apiVersion: v1

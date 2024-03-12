@@ -7,12 +7,13 @@ from datetime import timedelta
 import uuid, time, os
 
 
-#temporal_host = os.getenv("TEMPORAL_HOST")
-#temporal_port = os.getenv("TEMPORAL_PORT")
+#For Docker/Kuberntes
+temporal_host = os.getenv("TEMPORAL_HOST")
+temporal_port = os.getenv("TEMPORAL_PORT")
 
 #For testing
-temporal_host = "192.168.1.114"
-temporal_port = "7233"
+#temporal_host = "192.168.1.114"
+#temporal_port = "7233"
 
    
 @workflow.defn

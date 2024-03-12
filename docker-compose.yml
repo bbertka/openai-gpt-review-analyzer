@@ -10,3 +10,6 @@ services:
       AMAZON_PASSWORD: changeme
       TEMPORAL_HOST: 192.168.1.114
       TEMPORAL_PORT: 7233
+      REDIS_HOST: 192.168.1.110
+      REDIS_PORT: 6379
+      REDIS_DB: "0"

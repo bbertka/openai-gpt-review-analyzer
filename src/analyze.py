@@ -4,14 +4,15 @@ import redis, json, textwrap
 import os
 
 
-#redis_host = os.getenv("REDIS_HOST")
-#redis_port = int(os.getenv("REDIS_PORT"))
-#redis_db = os.getenv("REDIS_DB")
+#For Docker/Kuberntes
+redis_host = os.getenv("REDIS_HOST")
+redis_port = int(os.getenv("REDIS_PORT"))
+redis_db = os.getenv("REDIS_DB")
 
 #For testing
-redis_host = "192.168.1.110"
-redis_port = 6379
-redis_db = "0"
+#redis_host = "192.168.1.110"
+#redis_port = 6379
+#redis_db = "0"
 
 @activity.defn
 async def sentiment(text):
