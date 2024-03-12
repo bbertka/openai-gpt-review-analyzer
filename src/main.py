@@ -8,7 +8,7 @@ from datetime import timedelta
 import logging, uuid, time, textwrap, os
 
 
-temporal_url = os.getenv("TEMPORAL_HOST")
+temporal_host = os.getenv("TEMPORAL_HOST")
 temporal_port = os.getenv("TEMPORAL_PORT")
 
 #For testing
