@@ -69,7 +69,7 @@ async def runner(item: str):
         import scrape as scraper
     #logging.basicConfig(level=logging.INFO)
 
-    temporal_url = os.genenv("TEMPORAL_URL")
+    temporal_url = os.getenv("TEMPORAL_URL")
     temporal_port = os.getenv("TEMPORAL_PORT")
     connection_str = temporal_url+":"+temporal_port
     client = await Client.connect(connection_str)
