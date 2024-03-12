@@ -68,7 +68,11 @@ async def runner(item: str):
         import analyze as analyzer
         import scrape as scraper
     #logging.basicConfig(level=logging.INFO)
-    client = await Client.connect("temporal.home.lab:7233")
+
+    temporal_url = os.genenv("TEMPORAL_URL")
+    temporal_port = os.getenv("TEMPORAL_PORT")
+    connection_str = temporal_url+":"+temporal_port
+    client = await Client.connect(connection_str)
     async with Worker(
         client,
         task_queue="sentiment-task-queue",
