@@ -111,12 +111,12 @@ Configure the application by setting the following environment variables in `con
 
 # Building and Running the Temporal Review Analyzer
 
-## 1. Building the Docker Image
+## 1. Building the Docker Image (Optional)
 
 The application can be packaged into a Docker container. Two build scripts are provided for different architectures:
 
 - `build.sh` for standard x86_64 architectures.
-- `build-arm64.sh` for ARM64 architectures, suitable for newer Macs and some Linux distributions.
+- `build-arm64.sh` for ARM64 architectures, such as a Rasberry Pi K3s environment.
 
 ### Standard Build (x86_64)
 
@@ -128,7 +128,7 @@ Run the following command in your terminal:
 
 ### ARM64 Build
 
-Run the following command in your terminal:
+Be sure to run this on the same arch node you plan to ultimately execute your pods on.
 
 ```bash
 ./build-arm64.sh
