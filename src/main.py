@@ -7,15 +7,7 @@ from datetime import timedelta
 import uuid, time, os
 import logging
 
-#For Docker/Kuberntes
-#temporal_host = os.getenv("TEMPORAL_HOST")
-#temporal_port = os.getenv("TEMPORAL_PORT")
-
-#For testing
-temporal_host = "192.168.1.114"
-temporal_port = "7233"
-
-
+from config import PORT, TEMPORAL_HOST, TEMPORAL_PORT
 
 # Configure the logging system
 logging.basicConfig(
@@ -54,7 +46,7 @@ async def runner(item: str):
     with workflow.unsafe.imports_passed_through():
         import scrape as scraper
         import analyze as analyzer
-    connection_str = "%s:%s" % (temporal_host, temporal_port)
+    connection_str = "%s:%s" % (TEMPORAL_HOST, TEMPORAL_PORT)
     item = item
     client = await Client.connect(connection_str)
     async with Worker(
@@ -86,7 +78,7 @@ if __name__ == '__main__':
     try:
         with workflow.unsafe.imports_passed_through():
             from routes import CFWorker
-        worker = CFWorker(port=os.getenv("PORT"))
+        worker = CFWorker(port=PORT)
         worker.start()
         logger.info("Review Analyzer has started successfully!")
         while True:

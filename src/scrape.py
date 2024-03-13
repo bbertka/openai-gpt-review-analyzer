@@ -8,15 +8,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-#For Docker/Kubernetes
-#redis_host = os.getenv("REDIS_HOST")
-#redis_port = int(os.getenv("REDIS_PORT"))
-#redis_db = os.getenv("REDIS_DB")
-
-#For testing
-redis_host = "192.168.1.110"
-redis_port = 6379
-redis_db = "0"
+from config import REDIS_HOST, REDIS_PORT, REDIS_DB
 
 custom_headers = {
     "Accept-language": "en-GB,en;q=0.9",
@@ -78,7 +70,7 @@ def get_reviews(soup):
 
 @activity.defn
 async def scrape(item):
-    activity.logger.info("Scrape activity on parameter %s" % item)
+    #activity.logger.info("Scrape activity on parameter %s" % item)
     page = 1
     dataframes = pd.DataFrame()
     while True:
@@ -92,7 +84,7 @@ async def scrape(item):
         dataframes = pd.concat([dataframes,df], ignore_index=True)
         page = page+1
 
-    r = redis.Redis(host=redis_host, port=redis_port, db=redis_db, decode_responses=True)
+    r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB, decode_responses=True)
     itemkeys = list()
     for row in dataframes.itertuples(index=False):
         try:

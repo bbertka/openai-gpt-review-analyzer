@@ -1,26 +1,16 @@
 from textblob import TextBlob
 from temporalio import activity
 import redis, json, textwrap
-import os
 import logging
 
 logger = logging.getLogger(__name__)
 
-#For Docker/Kuberntes
-#redis_host = os.getenv("REDIS_HOST")
-#redis_port = int(os.getenv("REDIS_PORT"))
-#redis_db = os.getenv("REDIS_DB")
-
-#For testing
-redis_host = "192.168.1.110"
-redis_port = 6379
-redis_db = "0"
+from config import REDIS_HOST, REDIS_PORT, REDIS_DB
 
 @activity.defn
 async def sentiment(text):
 	""" Quick and Dirty Sentiment """
-	activity.logger.info("Sentiment activity with parameter %s" % text)
-
+	#activity.logger.info("Sentiment activity with parameter %s" % text)
 	value = 'Neutral'
 	sentiment = 0
 	try:
@@ -35,7 +25,7 @@ async def sentiment(text):
 
 @activity.defn
 async def star_rating(stars):
-	activity.logger.info("Star-rating activity with parameter %s" % stars)
+	#activity.logger.info("Star-rating activity with parameter %s" % stars)
 	rating = float(stars)
 
 	if rating >= 4:
@@ -67,7 +57,7 @@ async def quantify(ratings):
 
 @activity.defn
 async def interprete(rating):
-	activity.logger.info("Interprete activity with parameter %s" % rating)
+	#activity.logger.info("Interprete activity with parameter %s" % rating)
 	grade = "A"
 	if rating >= 97:
 		grade = "A+"
@@ -99,8 +89,8 @@ async def interprete(rating):
 
 @activity.defn
 async def analyze(itemkeys):
-	activity.logger.info("Analyze activity with len(itemkeys) %d" % len(itemkeys))
-	r = redis.Redis(host=redis_host, port=redis_port, db=redis_db, decode_responses=True)
+	#activity.logger.info("Analyze activity with len(itemkeys) %d" % len(itemkeys))
+	r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB, decode_responses=True)
 	i = 1
 	total = 0
 	for key in itemkeys:
