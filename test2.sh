@@ -1,5 +1,5 @@
 # Read the list of items from the file and execute the curl command concurrently
-cat items.txt | while IFS= read -r item; do
+cat items2.txt | while IFS= read -r item; do
   # URL encode the item (requires `jq` utility)
   encoded_item=$(jq -nr --arg item "$item" '$item|@uri')
   

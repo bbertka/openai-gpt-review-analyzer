@@ -7,4 +7,4 @@ while IFS= read -r item; do
   
   # Execute the curl command
   curl "http://192.168.1.110:5000/sentiment?item=${encoded_item}"
-done < ./items.txt
+done < ./items1.txt
