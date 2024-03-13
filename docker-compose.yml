@@ -13,3 +13,4 @@ services:
       REDIS_HOST: 192.168.1.110
       REDIS_PORT: 6379
       REDIS_DB: "0"
+      PORT: 5000

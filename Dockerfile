@@ -27,6 +27,7 @@ ENV AMAZON_PASSWORD changeme
 ENV REDIS_HOST 192.168.1.110 
 ENV REDIS_PORT 6379
 ENV REDIS_DB "0"
+ENV PORT 5000
 
 # Expose the port that the Flask application runs on
 EXPOSE 5000
