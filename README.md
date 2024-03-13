@@ -5,8 +5,6 @@ The Temporal Review Analyzer pipeline is a distributed system designed to automa
 
 ## Solution Overview
 
-This solution presents a robust pipeline designed to automate the collection and analysis of online product reviews, enabling a comprehensive understanding of customer sentiment for a specific product. At its core, the pipeline utilizes a distributed system architecture to scrape, analyze, and aggregate sentiment from product reviews found on Amazon.
-
 The pipeline is composed of several key components that work in unison:
 
 **Scraping Module:** This component is responsible for systematically retrieving product reviews from Amazon. Utilizing Python with libraries such as requests and BeautifulSoup, it navigates product pages, extracts review data (including ratings, titles, and review text), and stores the information for further analysis.
