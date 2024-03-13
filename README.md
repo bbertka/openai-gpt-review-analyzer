@@ -48,7 +48,7 @@ The sentiment analysis module utilizes the TextBlob library, which is built on t
 
 **Subjectivity Analysis:** Alongside polarity, TextBlob also measures the subjectivity of the text, with scores ranging from 0 (entirely objective) to 1 (entirely subjective). While not directly used for averaging the overall sentiment, this metric provides additional insight into the nature of the review content.
 
-###Quantification and Aggregation
+### Quantification and Aggregation
 Once each review has been assigned a sentiment polarity score, the algorithm quantifies these scores to determine an overall sentiment score for the product.
 
 **Weighting Reviews:** The algorithm can optionally weight reviews based on factors such as the review's helpfulness score, the recency of the review, or the reviewer's credibility. This step involves assigning more significance to certain reviews, although the initial implementation treats all reviews equally.
@@ -57,7 +57,7 @@ Once each review has been assigned a sentiment polarity score, the algorithm qua
 
 **Interpreting the Score:** The final average polarity score is interpreted to provide a qualitative understanding of the sentiment. For example, scores near 1 indicate overwhelmingly positive sentiment, scores near -1 indicate negative sentiment, and scores around 0 suggest mixed or neutral sentiment.
 
-###Enhancements for Depth of Analysis
+### Enhancements for Depth of Analysis
 To further enhance the analysis algorithm, several improvements can be considered:
 
 **Natural Language Understanding (NLU):** Integrating more advanced NLU capabilities can improve sentiment detection accuracy, especially for reviews with complex expressions, sarcasm, or nuanced opinions.
