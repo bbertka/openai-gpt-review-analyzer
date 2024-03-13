@@ -144,7 +144,7 @@ To run the application locally using Docker Compose, ensure you have `docker-com
 docker-compose up
 ```
 
-This command will start all necessary services, including Temporal, Redis, and the Temporal Review Analyzer application.
+This command will start the Review Analyzer application.
 
 ## 3. Deploying to Kubernetes
 
