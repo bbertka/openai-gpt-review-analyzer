@@ -1,26 +1,9 @@
 # Temporal Review Analyzer
 
-The Temporal Review Analyzer pipeline is an Minimum Viable Product (MVP) distributed system designed to automate the collection, analysis, and aggregation of online product reviews to derive an overall customer sentiment score. Utilizing Temporal for workflow orchestration, Flask for HTTP request handling, and Redis for data storage, the solution offers a scalable and fault-tolerant architecture for processing vast amounts of review data from Amazon.
+The Temporal Review Analyzer pipeline is a distributed system designed to automate the collection, analysis, and aggregation of online product reviews to derive an overall customer sentiment score. Utilizing Temporal for workflow orchestration, Flask for HTTP request handling, and Redis for data storage, the solution offers a scalable and fault-tolerant architecture for processing vast amounts of review data from Amazon.   This is an Minimum Viable Product (MVP) only and intended for the basis of more robust solutioning around Data Science and leveraging Temporal for workflow orchestration.
+
 
 ## Solution Overview
-
-The system comprises several components working together to enable the scraping and analysis of product reviews:
-
-- **Flask Application (`routes.py`)**: Serves as the entry point for the application, handling HTTP requests and triggering Temporal workflows.
-- **Temporal Workflow (`main.py`)**: Orchestrates the review scraping and analysis tasks, ensuring reliable execution and fault tolerance.
-- **Scraper Activity (`scrape.py`)**: Scrapes review data from Amazon product pages and stores it in Redis.
-- **Analysis Activity (`analyze.py`)**: Analyzes the scraped review data to determine overall sentiment.
-- **Configuration (`config.py`)**: Manages environment variables and application configuration settings.
-- **Redis** Acts as a temporary data store for the scraped reviews, facilitating distributed processing.
-
-### Key Features
-
-- Scalable review scraping and analysis.
-- Fault-tolerant workflow execution with Temporal.
-- Simple HTTP interface for triggering analysis jobs.
-- Configurable for different Amazon products.
-
-### Solution Overview
 
 This solution presents a robust pipeline designed to automate the collection and analysis of online product reviews, enabling a comprehensive understanding of customer sentiment for a specific product. At its core, the pipeline utilizes a distributed system architecture to scrape, analyze, and aggregate sentiment from product reviews found on Amazon.
 
@@ -39,7 +22,7 @@ The pipeline is composed of several key components that work in unison:
 **Flask Application:** A Flask-based web server acts as the interface for initiating the sentiment analysis pipeline. Users can trigger analysis through a simple HTTP request, specifying the product ID. The Flask application communicates with the Temporal workflow, which orchestrates the execution of the pipeline.
 
 
-### Sentiment Analysis Process
+## Sentiment Analysis Process
 The sentiment analysis module utilizes the TextBlob library, which is built on top of the NLTK (Natural Language Toolkit) library, to perform sentiment analysis on each scraped product review. TextBlob simplifies text processing tasks and provides an intuitive interface for sentiment analysis. The process involves:
 
 **Preprocessing:** Each review text is preprocessed to remove unnecessary symbols, whitespace, and HTML tags. This step ensures the analysis focuses on the meaningful content of the review.
@@ -48,7 +31,7 @@ The sentiment analysis module utilizes the TextBlob library, which is built on t
 
 **Subjectivity Analysis:** Alongside polarity, TextBlob also measures the subjectivity of the text, with scores ranging from 0 (entirely objective) to 1 (entirely subjective). While not directly used for averaging the overall sentiment, this metric provides additional insight into the nature of the review content.
 
-### Quantification and Aggregation
+## Quantification and Aggregation
 Once each review has been assigned a sentiment polarity score, the algorithm quantifies these scores to determine an overall sentiment score for the product.
 
 **Weighting Reviews:** The algorithm can optionally weight reviews based on factors such as the review's helpfulness score, the recency of the review, or the reviewer's credibility. This step involves assigning more significance to certain reviews, although the initial implementation treats all reviews equally.
@@ -57,7 +40,7 @@ Once each review has been assigned a sentiment polarity score, the algorithm qua
 
 **Interpreting the Score:** The final average polarity score is interpreted to provide a qualitative understanding of the sentiment. For example, scores near 1 indicate overwhelmingly positive sentiment, scores near -1 indicate negative sentiment, and scores around 0 suggest mixed or neutral sentiment.
 
-### Enhancements for Depth of Analysis
+## Enhancements for Depth of Analysis
 To further enhance the analysis algorithm, several improvements can be considered:
 
 **Natural Language Understanding (NLU):** Integrating more advanced NLU capabilities can improve sentiment detection accuracy, especially for reviews with complex expressions, sarcasm, or nuanced opinions.
@@ -66,6 +49,22 @@ To further enhance the analysis algorithm, several improvements can be considere
 
 **Machine Learning Models:** Custom machine learning models trained on domain-specific datasets can outperform general-purpose libraries like TextBlob, especially when tailored to the nuances of product reviews in specific categories.
 
+
+## Implementation Overview
+
+- **Flask Application (`routes.py`)**: Serves as the entry point for the application, handling HTTP requests and triggering Temporal workflows.
+- **Temporal Workflow (`main.py`)**: Orchestrates the review scraping and analysis tasks, ensuring reliable execution and fault tolerance.
+- **Scraper Activity (`scrape.py`)**: Scrapes review data from Amazon product pages and stores it in Redis.
+- **Analysis Activity (`analyze.py`)**: Analyzes the scraped review data to determine overall sentiment.
+- **Configuration (`config.py`)**: Manages environment variables and application configuration settings.
+- **Redis** Acts as a temporary data store for the scraped reviews, facilitating distributed processing.
+
+### Key Features
+
+- Scalable review scraping and analysis.
+- Fault-tolerant workflow execution with Temporal.
+- Simple HTTP interface for triggering analysis jobs.
+- Configurable for different Amazon products.
 
 ## Getting Started
 
