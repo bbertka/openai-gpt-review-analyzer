@@ -204,29 +204,29 @@ Before running the tests, ensure you have the following:
 
 ### Test Files
 
-- **`items.txt`**: Contains a list of Amazon product IDs to be analyzed.
-- **`test.sh`**: A shell script that reads `items.txt` and sends HTTP requests to the application for each product ID.
+- **`items1.txt`**: Contains a list of Amazon product IDs to be analyzed.
+- **`test1.sh`**: A shell script that reads `items1.txt` and sends HTTP requests to the application for each product ID.
 
 ### Running the Tests
 
-1. Ensure the Temporal Review Analyzer application is running and accessible at the specified URL within the `test.sh` script.
-2. Open a terminal and navigate to the directory containing `test.sh` and `items.txt`.
-3. Make `test.sh` executable by running:
+1. Ensure the Temporal Review Analyzer application is running and accessible at the specified URL within the `test1.sh` script.
+2. Open a terminal and navigate to the directory containing `test1.sh` and `items1.txt`.
+3. Make `test1.sh` executable by running:
 
 ```bash
-chmod +x test.sh
+chmod +x test1.sh
 ```
 
 4. Execute the test script:
 
 ```bash
-./test.sh
+./test1.sh
 ```
 
-The script will read each Amazon product ID from `items.txt`, URL encode the product ID, and send an HTTP GET request to the application. The application's response, including the sentiment analysis result for each product, will be printed to the terminal.
+The script will read each Amazon product ID from `items1.txt`, URL encode the product ID, and send an HTTP GET request to the application. The application's response, including the sentiment analysis result for each product, will be printed to the terminal.
 
 ```bash
-(env) Bens-MacBook-Pro:temporal-review-analyzer bbertka$ ./test.sh
+(env) Bens-MacBook-Pro:temporal-review-analyzer bbertka$ ./test1.sh
 {"item":"B0CJVL51V9","result":82.664,"verdict":"B-"}
 {"item":"B07CJV9H25","result":92.67128712871293,"verdict":"A-"}
 {"item":"B0CL38TZ3L","result":68.2,"verdict":"D+"}
@@ -242,11 +242,11 @@ The script will read each Amazon product ID from `items.txt`, URL encode the pro
 {"item":"B07Q5HMXTN","result":86.52277227722779,"verdict":"B"}
 ```
 
-### Understanding `test.sh`
+### Understanding `test1.sh`
 
 The script performs the following steps:
 
-- Reads each line (product ID) from `items.txt`.
+- Reads each line (product ID) from `items1.txt`.
 - Uses `jq` to URL encode the product ID to ensure it is properly formatted for inclusion in the query string of the HTTP request.
 - Sends an HTTP GET request to the application for each product ID, using `curl`.
 - Prints the application's response to the terminal.
