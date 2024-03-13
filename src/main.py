@@ -5,17 +5,27 @@ from temporalio.client import Client
 from temporalio.worker import Worker
 from datetime import timedelta
 import uuid, time, os
-
+import logging
 
 #For Docker/Kuberntes
-temporal_host = os.getenv("TEMPORAL_HOST")
-temporal_port = os.getenv("TEMPORAL_PORT")
+#temporal_host = os.getenv("TEMPORAL_HOST")
+#temporal_port = os.getenv("TEMPORAL_PORT")
 
 #For testing
-#temporal_host = "192.168.1.114"
-#temporal_port = "7233"
+temporal_host = "192.168.1.114"
+temporal_port = "7233"
 
-   
+
+
+# Configure the logging system
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
+logger = logging.getLogger(__name__)
+
+
 @workflow.defn
 class ScraperWorkflow:
     @workflow.run
@@ -64,21 +74,25 @@ async def runner(item: str):
                 task_queue="scraper-task-queue",
             )
 
-            print (f"Item: {item}, Overall Product Sentiment: {result}, {verdict}")
+            logger.info(f"Item: {item}, Overall Product Sentiment: {result}, {verdict}")
         except Exception as e:
-            print("main: Exception: %s" % e)
+            logger.exception("Failed to execute workflow")
         
         return result, verdict
 
 
 if __name__ == '__main__':
-    with workflow.unsafe.imports_passed_through():
-        from routes import CFWorker
-    worker = CFWorker(port=os.getenv("PORT"))
-    worker.start()
-    print("Review Analyzer has started successfully!")
-    while True:
-        time.sleep(60)
-        print("Review Analyzer is listening...")
-
-    worker.join()
+    logger.info("Review Analyzer is starting up...")
+    try:
+        with workflow.unsafe.imports_passed_through():
+            from routes import CFWorker
+        worker = CFWorker(port=os.getenv("PORT"))
+        worker.start()
+        logger.info("Review Analyzer has started successfully!")
+        while True:
+            time.sleep(60)
+            logger.info("Review Analyzer is listening...")
+    except Exception as e:
+        logger.exception("An error occurred while starting the Review Analyzer")
+    finally:
+        worker.join()

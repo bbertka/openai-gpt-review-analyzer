@@ -4,16 +4,19 @@ import pandas as pd
 import os, uuid
 from temporalio import activity
 import redis, json
+import logging
+
+logger = logging.getLogger(__name__)
 
 #For Docker/Kubernetes
-redis_host = os.getenv("REDIS_HOST")
-redis_port = int(os.getenv("REDIS_PORT"))
-redis_db = os.getenv("REDIS_DB")
+#redis_host = os.getenv("REDIS_HOST")
+#redis_port = int(os.getenv("REDIS_PORT"))
+#redis_db = os.getenv("REDIS_DB")
 
 #For testing
-#redis_host = "192.168.1.110"
-#redis_port = 6379
-#redis_db = "0"
+redis_host = "192.168.1.110"
+redis_port = 6379
+redis_db = "0"
 
 custom_headers = {
     "Accept-language": "en-GB,en;q=0.9",
@@ -26,7 +29,7 @@ custom_headers = {
 def get_soup(url):
     response = requests.get(url, headers=custom_headers, auth=(os.getenv('AMAZON_USERNAME'), os.getenv('AMAZON_PASSWORD')) )
     if response.status_code != 200:
-        print("Error in getting webpage")
+        logger.error(f"Error in getting webpage: {response.status_code}")
         exit(-1)
 
     soup = BeautifulSoup(response.text, "lxml")
@@ -75,11 +78,12 @@ def get_reviews(soup):
 
 @activity.defn
 async def scrape(item):
+    activity.logger.info("Scrape activity on parameter %s" % item)
     page = 1
     dataframes = pd.DataFrame()
     while True:
         search_url = "https://www.amazon.com/product-reviews/%s/ref=cm_cr_arp_d_paging_btm_next_%d?pageNumber=%d" % (item, page, page)
-        print("Item: %s, Scraping: %s" % (item, search_url) )
+        logger.info("Item: %s, Scraping: %s" % (item, search_url) )
         soup = get_soup(search_url)
         data = get_reviews(soup)
         df = pd.DataFrame(data=data)
@@ -105,7 +109,7 @@ async def scrape(item):
             r.set(key, value_str)
             itemkeys.append(key)
         except Exception as e:
-            print("Item: %s, Pandas row exception: %s" % e)
+            logger.exception("Item: %s, Pandas row exception")
             return 0
 
     return itemkeys

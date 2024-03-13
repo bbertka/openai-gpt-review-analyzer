@@ -2,22 +2,24 @@ from textblob import TextBlob
 from temporalio import activity
 import redis, json, textwrap
 import os
+import logging
 
+logger = logging.getLogger(__name__)
 
 #For Docker/Kuberntes
-redis_host = os.getenv("REDIS_HOST")
-redis_port = int(os.getenv("REDIS_PORT"))
-redis_db = os.getenv("REDIS_DB")
+#redis_host = os.getenv("REDIS_HOST")
+#redis_port = int(os.getenv("REDIS_PORT"))
+#redis_db = os.getenv("REDIS_DB")
 
 #For testing
-#redis_host = "192.168.1.110"
-#redis_port = 6379
-#redis_db = "0"
+redis_host = "192.168.1.110"
+redis_port = 6379
+redis_db = "0"
 
 @activity.defn
 async def sentiment(text):
 	""" Quick and Dirty Sentiment """
-	#activity.logger.info("Sentiment activity with parameter %s" % text)
+	activity.logger.info("Sentiment activity with parameter %s" % text)
 
 	value = 'Neutral'
 	sentiment = 0
@@ -33,7 +35,7 @@ async def sentiment(text):
 
 @activity.defn
 async def star_rating(stars):
-	#activity.logger.info("Star-rating activity with parameter %s" % stars)
+	activity.logger.info("Star-rating activity with parameter %s" % stars)
 	rating = float(stars)
 
 	if rating >= 4:
@@ -45,7 +47,6 @@ async def star_rating(stars):
 
 @activity.defn
 async def quantify(ratings):
-	#activity.logger.info("Quantify activity with parameter %s" % ratings)
 	#weighted vector of ratings [stars, title, content]
 	weights =[.40, .20, .40]
 	wv = [0.0,0.0,0.0]
@@ -66,7 +67,7 @@ async def quantify(ratings):
 
 @activity.defn
 async def interprete(rating):
-	#activity.logger.info("Interprete activity with parameter %s" % rating)
+	activity.logger.info("Interprete activity with parameter %s" % rating)
 	grade = "A"
 	if rating >= 97:
 		grade = "A+"
@@ -98,6 +99,7 @@ async def interprete(rating):
 
 @activity.defn
 async def analyze(itemkeys):
+	activity.logger.info("Analyze activity with len(itemkeys) %d" % len(itemkeys))
 	r = redis.Redis(host=redis_host, port=redis_port, db=redis_db, decode_responses=True)
 	i = 1
 	total = 0
@@ -107,14 +109,14 @@ async def analyze(itemkeys):
 		rating = retrieved_data['star']
 		title = retrieved_data['title']
 		content = retrieved_data['content']
-		print("Item: %s, Review: %s, %s, %s" % (key, rating, title, textwrap.shorten(content, width=128)))
+		logger.info("Item: %s, Review: %s, %s, %s" % (key, rating, title, textwrap.shorten(content, width=128)))
 		stars =  await star_rating(rating)
 		title =  await sentiment(title)
 		content = await sentiment(content)
 		ratings = [stars, title, content]
 		rating = await quantify(ratings)
 		verdict = await interprete(rating)
-		print("Item: %s, Computed weighted review vector: %s, as: %s" % (key, ratings, verdict) )
+		logger.info("Item: %s, Computed weighted review vector: %s, as: %s" % (key, ratings, verdict) )
 		total = total + rating
 		i = i+1
 	result = float(total/i)
