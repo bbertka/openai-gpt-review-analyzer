@@ -98,7 +98,7 @@ docker-compose up -d
 4. Run the Flask application:
 
 ```bash
-python routes.py
+python3 main.py
 ```
 
 ### Configuration
