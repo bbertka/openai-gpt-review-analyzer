@@ -2,15 +2,41 @@ from textblob import TextBlob
 from temporalio import activity
 import redis, json, textwrap
 import logging
+from openai import OpenAI
+from config import REDIS_HOST, REDIS_PORT, REDIS_DB, OPENAI_API_KEY
 
 logger = logging.getLogger(__name__)
 
-from config import REDIS_HOST, REDIS_PORT, REDIS_DB
+#client = OpenAI(api_key=OPENAI_API_KEY)
 
 @activity.defn
-async def sentiment(text):
-	""" Quick and Dirty Sentiment """
-	#activity.logger.info("Sentiment activity with parameter %s" % text)
+async def sentimentOpenAI(review_text):
+	"""
+	Analyzes the sentiment of the given review text using OpenAI's GPT model.
+	"""
+	client = OpenAI(api_key=OPENAI_API_KEY)
+	try:
+		chat_completion = client.chat.completions.create(
+            messages=[
+                {
+                    "role": "system", "content": "You are a helpful assistant.",
+                    "role": "user", "content": f"What is the sentiment of this review? Good, Bad, or Neutral?\n\nReview:\n{review_text}",
+                }
+            ],
+            model="gpt-3.5-turbo", #for cost savings
+        )
+		sentiment_result = chat_completion.choices[0].message.content.strip()
+		return sentiment_result
+	except Exception as e:
+		print(f"Error analyzing sentiment: {e}")
+		return None
+
+
+@activity.defn
+async def sentimentTextBlob(text):
+	"""
+	Analyzes the sentiment of the given review title using TextBlob.
+	"""
 	value = 'Neutral'
 	sentiment = 0
 	try:
@@ -101,8 +127,8 @@ async def analyze(itemkeys):
 		content = retrieved_data['content']
 		logger.info("Item: %s, Review: %s, %s, %s" % (key, rating, title, textwrap.shorten(content, width=128)))
 		stars =  await star_rating(rating)
-		title =  await sentiment(title)
-		content = await sentiment(content)
+		title =  await sentimentTextBlob(title)
+		content = await sentimentOpenAI(content)
 		ratings = [stars, title, content]
 		rating = await quantify(ratings)
 		verdict = await interprete(rating)

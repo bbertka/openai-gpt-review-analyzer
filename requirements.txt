@@ -7,3 +7,4 @@ asyncio
 Flask
 lxml
 redis
+openai
