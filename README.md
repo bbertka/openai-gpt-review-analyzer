@@ -1,6 +1,8 @@
 # Temporal Review Analyzer
 
-The Temporal Review Analyzer pipeline is a distributed system designed to automate the collection, analysis, and aggregation of online product reviews to derive an overall customer sentiment score. Utilizing Temporal for workflow orchestration, Flask for HTTP request handling, and Redis for data storage, the solution offers a scalable and fault-tolerant architecture for processing vast amounts of review data from Amazon.   This is an Minimum Viable Product (MVP) only and intended for the basis of more robust solutioning around Data Science and leveraging Temporal for workflow orchestration.
+This project integrates OpenAI's ChatGPT for foundational natural language processing tasks. It explores a microservices architecture, utilizing Python's programming flexibility alongside Flask's HTTP request management. The system incorporates Temporal for workflow management and Redis for data storage, establishing a scalable framework for data processing. This MVP is designed to process and analyze Amazon review datasets on a manageable scale, aiming to provide basic sentiment analysis and insights.
+
+The incorporation of ChatGPT's AI capabilities within a Python-based microservices framework marks the beginning of this project's journey. While the solution demonstrates a fundamental approach to navigating data workflows, it is cautious not to overstate its current capabilities. Instead, it presents an innovative, albeit initial, strategy for leveraging AI to begin understanding customer sentiments from sizable datasets. This effort aligns with the ongoing exploration within the field of data science, offering a starting point for more complex and scalable solutions in the future.
 
 
 ## Solution Overview
@@ -9,7 +11,7 @@ The pipeline is composed of several key components that work in unison:
 
 **Scraping Module:** This component is responsible for systematically retrieving product reviews from Amazon. Utilizing Python with libraries such as requests and BeautifulSoup, it navigates product pages, extracts review data (including ratings, titles, and review text), and stores the information for further analysis.
 
-**Sentiment Analysis Module:** Leveraging the TextBlob library, this module analyzes the sentiment of each review. TextBlob provides a simple API for diving into common natural language processing (NLP) tasks such as part-of-speech tagging, noun phrase extraction, and sentiment analysis. Each review is assigned a sentiment polarity score, indicating the review's overall positive or negative tone.
+**Sentiment Analysis Module:** Leveraging OpenAI's GPT model, and the TextBlob library, this module analyzes the sentiment of each review. The integration of OpenAI's GPT model allows for advanced sentiment analysis that can understand context and nuance in text far beyond traditional methods. Additionally, TextBlob provides a simple API for diving into common natural language processing (NLP) tasks such as part-of-speech tagging, noun phrase extraction, and sentiment analysis. Each review is assigned a sentiment score, indicating the review's overall positive, negative, or neutral tone.
 
 **Data Storage and Management:** Redis, an in-memory data store, acts as the intermediary storage solution, holding the scraped reviews and their sentiment scores. Its fast read/write capabilities ensure efficient data handling throughout the analysis process.
 
@@ -20,14 +22,17 @@ The pipeline is composed of several key components that work in unison:
 **Flask Application:** A Flask-based web server acts as the interface for initiating the sentiment analysis pipeline. Users can trigger analysis through a simple HTTP request, specifying the product ID. The Flask application communicates with the Temporal workflow, which orchestrates the execution of the pipeline.
 
 
-## Sentiment Analysis Process
-The sentiment analysis module utilizes the TextBlob library, which is built on top of the NLTK (Natural Language Toolkit) library, to perform sentiment analysis on each scraped product review. TextBlob simplifies text processing tasks and provides an intuitive interface for sentiment analysis. The process involves:
+## Advanced OpenAI GPT Sentiment Analysis
+
+The sentiment analysis module has been enhanced with the capability to use OpenAI's GPT model for an advanced analysis of review texts. This process includes:
 
 **Preprocessing:** Each review text is preprocessed to remove unnecessary symbols, whitespace, and HTML tags. This step ensures the analysis focuses on the meaningful content of the review.
 
-**Polarity Calculation:** For each cleaned review text, TextBlob evaluates the sentiment and assigns a polarity score. This score ranges from -1 to 1, where -1 represents a completely negative sentiment, 1 represents a completely positive sentiment, and 0 indicates neutrality.
+**OpenAI GPT Analysis:** For reviews that require a deeper understanding of context or contain nuanced expressions, the OpenAI GPT model is employed. This model can interpret the sentiment of complex sentences more accurately than traditional methods.
 
-**Subjectivity Analysis:** Alongside polarity, TextBlob also measures the subjectivity of the text, with scores ranging from 0 (entirely objective) to 1 (entirely subjective). While not directly used for averaging the overall sentiment, this metric provides additional insight into the nature of the review content.
+**Polarity Calculation:** For each cleaned review title, TextBlob evaluates the sentiment and assigns a polarity score. This score ranges from -1 to 1, where -1 represents a completely negative sentiment, 1 represents a completely positive sentiment, and 0 indicates neutrality.
+
+**Hybrid Analysis Approach:** By combining the fast analysis from TextBlob with the depth of analysis provided by the GPT model, the system ensures efficient and comprehensive sentiment analysis across all reviews.
 
 ## Quantification and Aggregation
 Once each review has been assigned a sentiment polarity score, the algorithm quantifies these scores to determine an overall sentiment score for the product.
@@ -53,8 +58,8 @@ To further enhance the analysis algorithm, several improvements can be considere
 - **Flask Application (`routes.py`)**: Serves as the entry point for the application, handling HTTP requests and triggering Temporal workflows.
 - **Temporal Workflow (`main.py`)**: Orchestrates the review scraping and analysis tasks, ensuring reliable execution and fault tolerance.
 - **Scraper Activity (`scrape.py`)**: Scrapes review data from Amazon product pages and stores it in Redis.
-- **Analysis Activity (`analyze.py`)**: Analyzes the scraped review data to determine overall sentiment.
-- **Configuration (`config.py`)**: Manages environment variables and application configuration settings.
+- **Analysis Activity (`analyze.py`)**: Analyzes the scraped review data using both TextBlob and OpenAI's GPT model to determine overall sentiment.
+- **Configuration (`config.py`)**: Manages environment variables and application configuration settings, including the OpenAI API key.
 - **Redis** Acts as a temporary data store for the scraped reviews, facilitating distributed processing.
 
 ### Key Features
@@ -68,6 +73,7 @@ To further enhance the analysis algorithm, several improvements can be considere
 
 ### Prerequisites
 
+- Access to OpenAI API with a valid API key.
 - Python 3.8+
 - Temporal Server
 - Redis instance
@@ -105,9 +111,12 @@ python3 src/main.py
 
 Configure the application by setting the following environment variables in `config.py` or through your deployment environment:
 
-- `AMAZON_USERNAME` and `AMAZON_PASSWORD` for Amazon login.
+- `AMAZON_USERNAME` and `AMAZON_PASSWORD` for Amazon login (optional).
 - `TEMPORAL_HOST` and `TEMPORAL_PORT` for connecting to the Temporal server.
 - `REDIS_HOST`, `REDIS_PORT`, and `REDIS_DB` for Redis connection details.
+-  `OPENAI_API_KEY` for OpenAI API access.
+
+
 
 # Building and Running the Temporal Review Analyzer
 
@@ -254,4 +263,4 @@ By following these instructions, you can easily run automated tests against the 
 
 # Contributing
 
-Feel free to contribute to the project by submitting pull requests or opening issues for bugs or enhancements.
+Contributions to enhance the Temporal Review Analyzer, such as improving the analysis algorithms, extending the functionality, or optimizing the architecture, are welcome. Please submit pull requests or open issues for any bugs or feature suggestions.
