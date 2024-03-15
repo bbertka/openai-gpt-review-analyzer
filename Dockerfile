@@ -28,6 +28,7 @@ ENV REDIS_HOST 192.168.1.110
 ENV REDIS_PORT 6379
 ENV REDIS_DB "0"
 ENV PORT 5000
+ENV OPENAI_API_KEY changeme
 
 # Expose the port that the Flask application runs on
 EXPOSE 5000

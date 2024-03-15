@@ -36,6 +36,8 @@ spec:
           value: "0"
         - name: PORT
           value: "5000"
+        - name: OPENAI_API_KEY
+          value: "changeme"
 
 
 ---
