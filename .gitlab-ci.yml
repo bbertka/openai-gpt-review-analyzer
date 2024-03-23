@@ -5,6 +5,11 @@ stages:
   - deploy
   - test-cd
 
+variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_CLI_EXPERIMENTAL: "enabled"
+    DOCKER_TLS_CERTDIR: ""
+
 include:
   - template: SAST.gitlab-ci.yml
 
