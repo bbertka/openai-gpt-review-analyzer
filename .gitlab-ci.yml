@@ -5,33 +5,6 @@ stages:
   - deploy
   - test-cd
 
-variables:  #Set/mask items in gitlab for flexibility and security. 
-  DOCKER_FILE: "Dockerfile"
-  DOCKER_REGISTRY: "docker.io"
-  DOCKER_CLI_EXPERIMENTAL: "enabled"
-  DOCKER_HOST: tcp://docker:2375
-  DOCKER_USERNAME: "" 
-  DOCKER_PASSWORD: ""
-  DOCKER_TLS_CERTDIR: ""
-  DOCKER_IMAGE_NAME: "bbertka/temporal-review-analyzer"  # Base image name
-  DOCKER_BASE_TAG: "latest"
-  KUBE_NAMESPACE: "dev01"
-  KUBE_TOKEN: ""
-  KUBE_URL: ""
-  APP_IP_ADDRESS: "" #location of running app (cluster, node, lb etc)
-  # Local test execution will need these set
-  OPENAI_API_KEY: ""
-  PORT: 5000 #Flask port
-  TEMPORAL_HOST: "192.168.1.114"
-  TEMPORAL_PORT: "7233"
-  REDIS_HOST: "192.168.1.110"
-  REDIS_PORT: 6379
-  REDIS_DB: "0"
-  AMAZON_USERNAME: "" #optional
-  AMAZON_PASSWORD: "" #optional
-  # Default item to search for in tests
-  ITEM_ID:  B0CJVL51V9
-
 include:
   - template: SAST.gitlab-ci.yml
 
