@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: temporal-review-analyzer
-        image: bbertka/temporal-review-analyzer-arm64:latest
+        image: bbertka/temporal-review-analyzer:latest-arm64
         ports:
         - containerPort: 5000
         env:
