@@ -9,6 +9,7 @@ variables:
   DOCKER_TLS_CERTDIR: ""
   DOCKER_IMAGE_NAME: "bbertka/temporal-review-analyzer"  # Base image name
   DOCKER_BASE_TAG: "latest"  # Base tag
+  ITEM_ID: "B0CJVL51V9"
 
 local-test:
   stage: test-ci
@@ -18,9 +19,9 @@ local-test:
     - pip install -r requirements.txt
   script:
     - |
-      python src/main.py &> /dev/null & 
+      python src/main.py &> /dev/null &
       sleep 5  # Allow some time for the server to start.
-      response=$(curl --fail -s "http://localhost:5000/sentiment?item=B0CJVL51V9")
+      response=$(curl --fail -s "http://localhost:5000/sentiment?item=${ITEM_ID}")
       echo "Response: $response"
       if ! echo "$response" | jq -e '.result != null and .verdict != null'; then
         echo "Test failed: 'result' or 'verdict' is null."
