@@ -84,6 +84,11 @@ With the repository imported and environment variables configured, your CI/CD pi
 - Making a new commit to your repository.
 - Manually running the pipeline from **CI/CD** > **Pipelines** in your GitLab project.
 
+### Overview of Kubernetes Deployment:
+
+- Secrets Creation: The deploy job creates Kubernetes secrets for AMAZON_PASSWORD and OPENAI_API_KEY by encoding these variables to base64 and applying them to the cluster. This ensures that sensitive information is securely stored and accessible to the deployment.
+- Deployment Application: The job then uses envsubst to substitute placeholders in deployment.yml with environment variable values defined in GitLab CI/CD settings. This allows placeholders in this deployment.yml to be replaced.
+- Deployment and Rollout: After applying the deployment configuration, the job triggers a rollout restart to ensure the new configuration is used by the deployed pods.
 ---
 
 ## Testing Guide
