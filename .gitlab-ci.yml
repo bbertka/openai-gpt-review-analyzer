@@ -22,5 +22,11 @@ local-test:
       sleep 5  # Allow some time for the server to start.
       response=$(curl --fail -s "http://localhost:5000/sentiment?item=B0CJVL51V9")
       echo "Response: $response"
+      if ! echo "$response" | jq -e '.result != null and .verdict != null'; then
+        echo "Test failed: 'result' or 'verdict' is null."
+        exit 1
+      else
+        echo "Test passed: Both 'result' and 'verdict' are present and not null."
+
   only:
     - main
