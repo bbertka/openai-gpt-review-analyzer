@@ -37,7 +37,7 @@ remote-test:
   script:
     - set -e  # Ensure the script exits on the first command that fails.
     - |
-      response=$(curl -s "http://${APP_IP_ADDRESS}/sentiment?item=${ITEM_ID}")
+      response=$(curl -s "http://${APP_IP_ADDRESS}:${PORT}/sentiment?item=${ITEM_ID}")
       echo "Response: $response"
       if ! echo "$response" | jq -e '.result != null and .verdict != null'; then
         echo "Test failed: 'result' or 'verdict' is null."
