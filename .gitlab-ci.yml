@@ -104,11 +104,12 @@ deploy-k3s:
   stage: deploy
   image: alpine/k8s:1.29.2
   script:
+    - apk add --no-cache gettext  # Install envsubst, part of the gettext package
     - kubectl config set-cluster default-cluster --server=$KUBE_URL --insecure-skip-tls-verify=true
     - kubectl config set-credentials default-user --token=$KUBE_TOKEN
     - kubectl config set-context default --cluster=default-cluster --user=default-user --namespace=$KUBE_NAMESPACE
     - kubectl config use-context default
-    - kubectl apply -f deployment.yml
+    - envsubst < deployment.yml | kubectl apply -f -  # Use envsubst to replace variables and apply the configuration
     - DEPLOYMENT_NAME=$(grep 'name:' deployment.yml | awk 'NR==1{print $2}')
     - kubectl rollout restart deployment/$DEPLOYMENT_NAME -n $KUBE_NAMESPACE
   only:
