@@ -1,5 +1,7 @@
 stages:
   - test-ci
+  - scan
+  - build
 
 variables:
   DOCKER_FILE: "Dockerfile"
@@ -9,7 +11,10 @@ variables:
   DOCKER_TLS_CERTDIR: ""
   DOCKER_IMAGE_NAME: "bbertka/temporal-review-analyzer"  # Base image name
   DOCKER_BASE_TAG: "latest"  # Base tag
-  ITEM_ID: "B0CJVL51V9"
+  ITEM_ID:  B0CJVL51V9
+
+include:
+  - template: SAST.gitlab-ci.yml
 
 local-test:
   stage: test-ci
@@ -29,5 +34,48 @@ local-test:
       else
         echo "Test passed: Both 'result' and 'verdict' are present and not null."
       fi
+  only:
+    - main
+
+sast:
+  stage: scan
+  variables:
+    SAST_EXCLUDED_PATHS: "docs/, test/"
+  allow_failure: true
+
+build-amd64:
+  stage: build
+  image: docker:latest
+  services:
+    - name: docker:dind
+      alias: docker
+  before_script:
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" $DOCKER_REGISTRY --password-stdin
+  script:
+    - >
+      docker build
+      -t $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:$DOCKER_BASE_TAG
+      -f $DOCKER_FILE .
+    - docker push $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:$DOCKER_BASE_TAG
+  only:
+    - main
+
+build-arm64:
+  stage: build
+  image: docker:latest
+  services:
+    - name: docker:dind
+      alias: docker
+  before_script:
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" $DOCKER_REGISTRY --password-stdin
+    - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+    - docker buildx create --use
+  script:
+    - >
+      docker buildx build
+      --platform linux/arm64
+      -t $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:$DOCKER_BASE_TAG-arm64
+      -f $DOCKER_FILE
+      --push .
   only:
     - main
