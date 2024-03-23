@@ -86,8 +86,6 @@ With the repository imported and environment variables configured, your CI/CD pi
 
 ---
 
-This section provides a general guide for users to import your GitHub repository into GitLab, set up CI/CD environment variables based on a provided screenshot, and get started with running CI/CD pipelines. Make sure to customize the instructions based on your project's specific requirements and the details of the screenshot you're providing.
-
 ## Testing Guide
 
 This guide provides instructions on how to run automated tests for the Temporal Review Analyzer application. The tests are designed to send HTTP requests to the application for a list of predefined Amazon product IDs to analyze sentiment.
