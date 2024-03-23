@@ -14,17 +14,18 @@ local-test:
   stage: test-ci
   image: python:3.8
   script:
-    - set -e  # Exit immediately if a command exits with a non-zero status.
-    - pip3 install -r requirements.txt  # Install dependencies.
-    - python3 src/main.py &> /dev/null &  # Start app in the background, suppress output.
-    - sleep 5  # Give Flask some time to start.
-    - |
-      response=$(curl --fail -s "http://localhost:5000/sentiment?item=B0CJVL51V9")
-      echo "Response: $response"
-      if ! echo "$response" | grep -q '"item": "B0CJVL51V9"'; then
-        echo "Test failed: B0CJVL51V9 sentiment not available."
+    - apt-get update && apt-get install -y jq  # Install jq for JSON parsing
+    - pip install -r requirements.txt  # Install Python dependencies
+    - python src/main.py &> /dev/null &  # Start your Python app
+    - sleep 5  # Allow some time for the server to start
+    - response=$(curl --fail -s "http://localhost:5000/sentiment?item=B0CJVL51V9")
+    - echo "Response: $response"
+    - >
+      if echo "$response" | jq -e '.result != null and .verdict != null' > /dev/null; then
+        echo "Test passed: Both 'result' and 'verdict' are present and not null."
+      else
+        echo "Test failed: 'result' or 'verdict' is null."
         exit 1
       fi
-    - kill $!  # Stop the Flask app.
   only:
     - main

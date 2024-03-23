@@ -22,8 +22,7 @@ def get_soup(url):
     response = requests.get(url, headers=custom_headers, auth=(os.getenv('AMAZON_USERNAME'), os.getenv('AMAZON_PASSWORD')) )
     if response.status_code != 200:
         logger.error(f"Error in getting webpage: {response.status_code}")
-        exit(-1)
-
+        return 0
     soup = BeautifulSoup(response.text, "lxml")
     return soup
 
@@ -77,6 +76,8 @@ async def scrape(item):
         search_url = "https://www.amazon.com/product-reviews/%s/ref=cm_cr_arp_d_paging_btm_next_%d?pageNumber=%d" % (item, page, page)
         logger.info("Item: %s, Scraping: %s" % (item, search_url) )
         soup = get_soup(search_url)
+        if not soup:
+            break
         data = get_reviews(soup)
         df = pd.DataFrame(data=data)
         if df.size == 0:
