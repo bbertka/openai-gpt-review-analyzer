@@ -21,21 +21,21 @@ spec:
         - containerPort: 5000
         env:
         - name: AMAZON_USERNAME
-          value: "changeme"
+          value: "${AMAZON_USERNAME}"
         - name: AMAZON_PASSWORD
-          value: "changeme"
+          value: "${AMAZON_PASSWORD}"
         - name: TEMPORAL_HOST
-          value: "192.168.1.114"
+          value: "${TEMPORAL_HOST}"
         - name: TEMPORAL_PORT
-          value: "7233"
+          value: "${TEMPORAL_PORT}"
         - name: REDIS_HOST
-          value: "192.168.1.110"
+          value: "${REDIS_HOST}"
         - name: REDIS_PORT
-          value: "6379"
+          value: "${REDIS_PORT}"
         - name: REDIS_DB
-          value: "0"
+          value: "${REDIS_DB}"
         - name: PORT
-          value: "5000"
+          value: "${PORT}"
         - name: OPENAI_API_KEY
           value: "${OPENAI_API_KEY}"
 
@@ -51,5 +51,5 @@ spec:
   ports:
     - protocol: TCP
       port: 5000
-      targetPort: 5000
+      targetPort: ${PORT}
   type: LoadBalancer
