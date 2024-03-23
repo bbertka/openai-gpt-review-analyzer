@@ -66,14 +66,14 @@ async def quantify(ratings):
 	#weighted vector of ratings [stars, title, content]
 	weights =[.40, .20, .40]
 	wv = [0.0,0.0,0.0]
-	scores = [0.0,0.0,0.0]
+	scores = ['','','']
 	for i in range(3):
 		if ratings[i] == "Good":
-			scores[i] = 100.0
+			scores[i] = 100
 		elif ratings[i] == "Neutral":
-			scores[i] = 73.0
+			scores[i] = 73
 		elif ratings[i] == "Bad":
-			scores[i] = 0.0
+			scores[i] = 0
 		wv[i] = scores[i]*weights[i]
 
 	total= 0.0
