@@ -18,7 +18,7 @@ local-test:
     - pip install -r requirements.txt
   script:
     - |
-      python src/main.py &> /dev/null &  # Start your Python app.
+      python src/main.py &> /dev/null & 
       sleep 5  # Allow some time for the server to start.
       response=$(curl --fail -s "http://localhost:5000/sentiment?item=B0CJVL51V9")
       echo "Response: $response"
@@ -27,6 +27,6 @@ local-test:
         exit 1
       else
         echo "Test passed: Both 'result' and 'verdict' are present and not null."
-
+      fi
   only:
     - main
