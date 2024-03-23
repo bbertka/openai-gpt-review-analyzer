@@ -28,6 +28,66 @@ This project integrates OpenAI's ChatGPT for foundational natural language proce
 - Kubernetes
 - GitLab 
 
+To add a section to your markdown README that provides instructions on getting a GitLab environment running with your repository, you can follow this template. Adjust the details as necessary to fit your project's specifics.
+
+---
+## GitLab Pipeline
+![Gitlab Pipeline](docs/images/pipeline.jpg)
+
+## Setting Up in GitLab
+
+To run this project in a GitLab environment, follow these steps to import the repository into GitLab and set up the necessary CI/CD environment variables.
+
+### Importing the Repository into GitLab
+
+1. **Go to GitLab**: Log in to your GitLab account.
+2. **New Project**: Navigate to the **New project** page.
+3. **Import Project**: Click on **Import project** tab.
+4. **Repo by URL**: Choose **Repo by URL**, and fill in the form with the GitHub repository URL.
+    - **Git repository URL**: `https://github.com/yourusername/openai-gpt-review-analyzer.git` (Replace with your GitHub repo URL)
+    - **Project name**: Ideally the same as your GitHub repository.
+    - **Visibility Level**: Choose according to your preference.
+5. **Begin Import**: Click on **Create project** to start the import process.
+
+### Configuring CI/CD Environment Variables
+
+After importing your project, you need to configure the CI/CD environment variables to match the project's requirements.
+
+1. **Navigate to CI/CD Settings**:
+    - Go to your project's homepage in GitLab.
+    - Select **Settings** > **CI / CD**.
+    - Expand the **Variables** section.
+
+2. **Add Variables**:
+    - Click on **Add Variable** for each of the following variables you need to set. Here is a list of common variables used in CI/CD pipelines (replace these with the actual variables you need for your project):
+        - `DOCKER_USERNAME`: Your DockerHub username.
+        - `DOCKER_PASSWORD`: Your DockerHub password or access token.
+        - `DOCKER_REGISTRY`: The Docker registry URL, e.g., `docker.io`.
+        - `DOCKER_IMAGE_NAME`: The name of the Docker image you wish to build and push.
+    - Input the **Key** and **Value** for each variable.
+    - Choose the **Type** as `Variable`.
+    - Select the **Mask variable** option if it's sensitive information like passwords.
+    - Click **Add Variable** to save each one.
+
+3. **Refer to the Provided Screenshot for Reference**:
+    - To ensure you have all the necessary environment variables configured, please refer to the screenshot provided (Note: Since I cannot directly show or access files, please ensure to link or attach the screenshot appropriately within your GitLab repository or README document).
+
+![Gitlab Variables](docs/images/pipeline_variables.jpg)
+
+    - Here are the following results of Pod variables for deployed application
+![Pod Environment](docs/images/container_vars.jpg)
+
+### Running CI/CD Pipeline
+
+With the repository imported and environment variables configured, your CI/CD pipeline is now ready to run. Trigger a pipeline by:
+
+- Making a new commit to your repository.
+- Manually running the pipeline from **CI/CD** > **Pipelines** in your GitLab project.
+
+---
+
+This section provides a general guide for users to import your GitHub repository into GitLab, set up CI/CD environment variables based on a provided screenshot, and get started with running CI/CD pipelines. Make sure to customize the instructions based on your project's specific requirements and the details of the screenshot you're providing.
+
 ## Testing Guide
 
 This guide provides instructions on how to run automated tests for the Temporal Review Analyzer application. The tests are designed to send HTTP requests to the application for a list of predefined Amazon product IDs to analyze sentiment.
