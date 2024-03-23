@@ -23,7 +23,10 @@ spec:
         - name: AMAZON_USERNAME
           value: "${AMAZON_USERNAME}"
         - name: AMAZON_PASSWORD
-          value: "${AMAZON_PASSWORD}"
+          valueFrom:
+            secretKeyRef:
+              name: amazon-secret
+              key: AMAZON_PASSWORD
         - name: TEMPORAL_HOST
           value: "${TEMPORAL_HOST}"
         - name: TEMPORAL_PORT
@@ -37,9 +40,10 @@ spec:
         - name: PORT
           value: "${PORT}"
         - name: OPENAI_API_KEY
-          value: "${OPENAI_API_KEY}"
-
-
+          valueFrom:
+            secretKeyRef:
+              name: openai-api-key-secret
+              key: OPENAI_API_KEY
 ---
 apiVersion: v1
 kind: Service

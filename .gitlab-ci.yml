@@ -80,17 +80,28 @@ build-arm64:
   only:
     - main
 
-# TODO: Templatize the deployment manifest
 deploy-k3s:
   stage: deploy
   image: alpine/k8s:1.29.2
-  script:
-    - apk add --no-cache gettext  # Install envsubst, part of the gettext package
+  before_script:
+    # Install necessary tools
+    - apk add --no-cache gettext  # Install envsubst
+    # Configure kubectl
     - kubectl config set-cluster default-cluster --server=$KUBE_URL --insecure-skip-tls-verify=true
     - kubectl config set-credentials default-user --token=$KUBE_TOKEN
     - kubectl config set-context default --cluster=default-cluster --user=default-user --namespace=$KUBE_NAMESPACE
     - kubectl config use-context default
-    - envsubst < deployment.yml | kubectl apply -f -  # Use envsubst to replace variables and apply the configuration
+    # Create or update secrets
+    - echo -n $AMAZON_PASSWORD | base64 > ./amazon_password_base64
+    - echo -n $OPENAI_API_KEY | base64 > ./openai_api_key_base64
+    - kubectl create secret generic amazon-secret --from-file=AMAZON_PASSWORD=./amazon_password_base64 -n $KUBE_NAMESPACE --dry-run=client -o yaml | kubectl apply -f -
+    - kubectl create secret generic openai-api-key-secret --from-file=OPENAI_API_KEY=./openai_api_key_base64 -n $KUBE_NAMESPACE --dry-run=client -o yaml | kubectl apply -f -
+    # Cleanup
+    - rm -f ./amazon_password_base64 ./openai_api_key_base64
+  script:
+    # Apply deployment with envsubst
+    - envsubst < deployment.yml | kubectl apply -f -
+    # Rollout restart
     - DEPLOYMENT_NAME=$(grep 'name:' deployment.yml | awk 'NR==1{print $2}')
     - kubectl rollout restart deployment/$DEPLOYMENT_NAME -n $KUBE_NAMESPACE
   only:
