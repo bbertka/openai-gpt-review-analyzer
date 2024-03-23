@@ -15,17 +15,16 @@ local-test:
   image: python:3.8
   script:
     - apt-get update && apt-get install -y jq  # Install jq for JSON parsing
-    - pip install -r requirements.txt  # Install Python dependencies
-    - python src/main.py &> /dev/null &  # Start your Python app
-    - sleep 5  # Allow some time for the server to start
-    - response=$(curl --fail -s "http://localhost:5000/sentiment?item=B0CJVL51V9")
-    - echo "Response: $response"
-    - >
-      if echo "$response" | jq -e '.result != null and .verdict != null' > /dev/null; then
-        echo "Test passed: Both 'result' and 'verdict' are present and not null."
-      else
+    - pip install -r requirements.txt  # Install Python dependencies.
+    - python src/main.py &> /dev/null &  # Start your Python app.
+    - sleep 5  # Allow some time for the server to start.
+    - |
+      response=$(curl --fail -s "http://localhost:5000/sentiment?item=B0CJVL51V9")
+      echo "Response: $response"
+      if ! echo "$response" | jq -e '.result != null and .verdict != null' > /dev/null; then
         echo "Test failed: 'result' or 'verdict' is null."
         exit 1
-      fi
+      else
+        echo "Test passed: Both 'result' and 'verdict' are present and not null."
   only:
     - main
