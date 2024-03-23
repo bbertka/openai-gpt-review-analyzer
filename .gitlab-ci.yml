@@ -1,4 +1,8 @@
 stages:
+  - test-ci
+  - scan
+  - build
+  - deploy
   - test-cd
 
 variables:  #Set/mask items in gitlab for flexibility and security. 
@@ -28,6 +32,87 @@ variables:  #Set/mask items in gitlab for flexibility and security.
   # Default item to search for in tests
   ITEM_ID:  B0CJVL51V9
 
+include:
+  - template: SAST.gitlab-ci.yml
+
+local-test:
+  stage: test-ci
+  image: python:3.8
+  before_script:
+    - apt-get update && apt-get install -y jq
+    - pip install -r requirements.txt
+  script:
+    - |
+      python src/main.py &> /dev/null &
+      sleep 5  # Allow some time for the server to start.
+      response=$(curl --fail -s "http://localhost:5000/sentiment?item=${ITEM_ID}")
+      echo "Response: $response"
+      if ! echo "$response" | jq -e '.result != null and .verdict != null'; then
+        echo "Test failed: 'result' or 'verdict' is null."
+        exit 1
+      else
+        echo "Test passed: Both 'result' and 'verdict' are present and not null."
+      fi
+  only:
+    - main
+
+sast:
+  stage: scan
+  variables:
+    SAST_EXCLUDED_PATHS: "docs/, test/"
+  allow_failure: true
+
+build-amd64:
+  stage: build
+  image: docker:latest
+  services:
+    - name: docker:dind
+      alias: docker
+  before_script:
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" $DOCKER_REGISTRY --password-stdin
+  script:
+    - >
+      docker build
+      -t $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:$DOCKER_BASE_TAG
+      -f $DOCKER_FILE .
+    - docker push $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:$DOCKER_BASE_TAG
+  only:
+    - main
+
+build-arm64:
+  stage: build
+  image: docker:latest
+  services:
+    - name: docker:dind
+      alias: docker
+  before_script:
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" $DOCKER_REGISTRY --password-stdin
+    - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+    - docker buildx create --use
+  script:
+    - >
+      docker buildx build
+      --platform linux/arm64
+      -t $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:$DOCKER_BASE_TAG-arm64
+      -f $DOCKER_FILE
+      --push .
+  only:
+    - main
+
+# TODO: Templatize the deployment manifest
+deploy-k3s:
+  stage: deploy
+  image: alpine/k8s:1.29.2
+  script:
+    - kubectl config set-cluster default-cluster --server=$KUBE_URL --insecure-skip-tls-verify=true
+    - kubectl config set-credentials default-user --token=$KUBE_TOKEN
+    - kubectl config set-context default --cluster=default-cluster --user=default-user --namespace=$KUBE_NAMESPACE
+    - kubectl config use-context default
+    - kubectl apply -f deployment.yml
+    - DEPLOYMENT_NAME=$(grep 'name:' deployment.yml | awk 'NR==1{print $2}')
+    - kubectl rollout restart deployment/$DEPLOYMENT_NAME -n $KUBE_NAMESPACE
+  only:
+    - main
 
 remote-test:
   stage: test-cd
