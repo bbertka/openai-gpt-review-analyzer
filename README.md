@@ -1,6 +1,11 @@
 # OpenAI GPT Review Analyzer 
 
-This project integrates OpenAI's ChatGPT for foundational natural language processing tasks. It explores a microservices architecture, utilizing Python's programming flexibility alongside Flask's HTTP request management. The system incorporates Temporal for workflow management and Redis for data storage, establishing a scalable framework for data processing. This MVP is designed to process and analyze Amazon review datasets on a manageable scale, aiming to provide basic sentiment analysis and insights.  For more deep dive into the application itself, please follow this link [THEORY.md](docs/THEORY.md)
+This project integrates OpenAI's ChatGPT for foundational natural language processing tasks. It explores a microservices architecture, utilizing Python's programming flexibility alongside Flask's HTTP request management. The system incorporates Temporal for workflow management and Redis for data storage, establishing a scalable framework for data processing. This MVP is designed to process and analyze Amazon review datasets on a manageable scale, aiming to provide basic sentiment analysis and insights.  
+
+- For more deep dive into the application itself, follow this link [THEORY.md](docs/THEORY.md)
+
+- To jump straight to the GitLab Pipeline overcview, follow this link [PIPELINE.md](docs/PIPELINE.md)
+
 
 ## Implementation Overview
 
