@@ -92,12 +92,8 @@ deploy-k3s:
     - kubectl config set-context default --cluster=default-cluster --user=default-user --namespace=$KUBE_NAMESPACE
     - kubectl config use-context default
     # Create or update secrets
-    - echo -n $AMAZON_PASSWORD | base64 > ./amazon_password_base64
-    - echo -n $OPENAI_API_KEY | base64 > ./openai_api_key_base64
-    - kubectl create secret generic amazon-secret --from-file=AMAZON_PASSWORD=./amazon_password_base64 -n $KUBE_NAMESPACE --dry-run=client -o yaml | kubectl apply -f -
-    - kubectl create secret generic openai-api-key-secret --from-file=OPENAI_API_KEY=./openai_api_key_base64 -n $KUBE_NAMESPACE --dry-run=client -o yaml | kubectl apply -f -
-    # Cleanup
-    - rm -f ./amazon_password_base64 ./openai_api_key_base64
+    - kubectl create secret generic amazon-secret --from-literal=AMAZON_PASSWORD=$AMAZON_PASSWORD -n $KUBE_NAMESPACE --dry-run=client -o yaml | kubectl apply -f -
+    - kubectl create secret generic openai-api-key-secret --from-literal=OPENAI_API_KEY=$OPENAI_API_KEY -n $KUBE_NAMESPACE --dry-run=client -o yaml | kubectl apply -f -
   script:
     # Apply deployment with envsubst
     - envsubst < deployment.yml | kubectl apply -f -
@@ -106,6 +102,7 @@ deploy-k3s:
     - kubectl rollout restart deployment/$DEPLOYMENT_NAME -n $KUBE_NAMESPACE
   only:
     - main
+
 
 remote-test:
   stage: test-cd
