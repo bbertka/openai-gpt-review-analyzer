@@ -2,7 +2,7 @@
 
 # Gitlab Pipeline Overview
 
-Take a look at the GITLAB Pipeline here [.gitlab-ci.yml](../.gitlab-ci.ymld)
+Take a look at the GITLAB Pipeline here [.gitlab-ci.yml](../.gitlab-ci.yml)
 
 All variables are set within GitLab's CI/CD Variable space for the project.  Note that the Dockerfile, K3's deployment.yml, and .gitlab-ci.yml all work togeher.  The Dockerfile has stubs that are populated by the deployment, which is pupulated by the pipeline.  Here is a breakdown of the deployment and pipeline.
 
