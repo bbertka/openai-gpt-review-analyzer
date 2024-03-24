@@ -72,7 +72,9 @@ After importing your project, you need to configure the CI/CD environment variab
 
 ![Gitlab Variables](docs/images/pipeline_variables.jpg)
 
-    - Here are the following results of Docker/Pod env variables for the deployed application.  Notice the secrets that are in place from the pipeline.
+#### Pod Variables after CI/CD Config
+
+Here are the following results of Docker/Pod env variables for the deployed application.  Notice the secrets that are in place from the pipeline.
 
 ```bash
 $ kubectl get deployment temporal-review-analyzer-deployment -n dev01 -o yaml | yq '.spec.template.spec.containers[].env'
