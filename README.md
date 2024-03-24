@@ -4,8 +4,7 @@ This project integrates OpenAI's ChatGPT for foundational natural language proce
 
 - For more deep dive into the application itself, follow this link [THEORY.md](docs/THEORY.md)
 
-- To jump straight to the GitLab Pipeline overcview, follow this link [PIPELINE.md](docs/PIPELINE.md)
-
+- To jump straight to the GitLab Pipeline overview, follow this link [PIPELINE.md](docs/PIPELINE.md)
 
 ## Implementation Overview
 
