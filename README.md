@@ -28,8 +28,6 @@ This project integrates OpenAI's ChatGPT for foundational natural language proce
 - Kubernetes
 - GitLab 
 
-To add a section to your markdown README that provides instructions on getting a GitLab environment running with your repository, you can follow this template. Adjust the details as necessary to fit your project's specifics.
-
 ---
 ## GitLab Pipeline
 ![Gitlab Pipeline](docs/images/pipeline.jpg)
@@ -74,8 +72,64 @@ After importing your project, you need to configure the CI/CD environment variab
 
 ![Gitlab Variables](docs/images/pipeline_variables.jpg)
 
-    - Here are the following results of Pod variables for deployed application
-![Pod Environment](docs/images/container_vars.jpg)
+    - Here are the following results of Docker/Pod env variables for the deployed application.  Notice the secrets that are in place from the pipeline.
+
+```bash
+$ kubectl get deployment temporal-review-analyzer-deployment -n dev01 -o yaml | yq '.spec.template.spec.containers[].env'
+[
+  {
+    "name": "TEMPORAL_HOST",
+    "value": "192.168.1.114"
+  },
+  {
+    "name": "TEMPORAL_PORT",
+    "value": "7233"
+  },
+  {
+    "name": "REDIS_HOST",
+    "value": "192.168.1.110"
+  },
+  {
+    "name": "REDIS_PORT",
+    "value": "6379"
+  },
+  {
+    "name": "REDIS_DB"
+    "value": "0"
+  },  
+  {
+    "name": "PORT",
+    "value": "5000"
+  },
+  {
+    "name": "OPENAI_API_KEY",
+    "valueFrom": {
+      "secretKeyRef": {
+        "key": "OPENAI_API_KEY",
+        "name": "openai-api-key-secret"
+      }
+    }
+  },
+  {
+    "name": "AMAZON_USERNAME",
+    "valueFrom": {
+      "secretKeyRef": {
+        "key": "AMAZON_USERNAME",
+        "name": "amazon-username-secret"
+      }
+    }
+  },
+  {
+    "name": "AMAZON_PASSWORD",
+    "valueFrom": {
+      "secretKeyRef": {
+        "key": "AMAZON_PASSWORD",
+        "name": "amazon-password-secret"
+      }
+    }
+  }
+]
+```
 
 ### Running CI/CD Pipeline
 
