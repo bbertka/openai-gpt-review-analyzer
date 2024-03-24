@@ -1,4 +1,4 @@
-![Gitlab Pipeline](docs/images/pipeline_bumper.jpg)
+![Gitlab Pipeline](images/pipeline_bumper.jpg)
 
 # Gitlab Pipeline Overview
 
