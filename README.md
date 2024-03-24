@@ -1,6 +1,6 @@
 # OpenAI GPT Review Analyzer 
 
-This project integrates OpenAI's ChatGPT for foundational natural language processing tasks. It explores a microservices architecture, utilizing Python's programming flexibility alongside Flask's HTTP request management. The system incorporates Temporal for workflow management and Redis for data storage, establishing a scalable framework for data processing. This MVP is designed to process and analyze Amazon review datasets on a manageable scale, aiming to provide basic sentiment analysis and insights.
+This project integrates OpenAI's ChatGPT for foundational natural language processing tasks. It explores a microservices architecture, utilizing Python's programming flexibility alongside Flask's HTTP request management. The system incorporates Temporal for workflow management and Redis for data storage, establishing a scalable framework for data processing. This MVP is designed to process and analyze Amazon review datasets on a manageable scale, aiming to provide basic sentiment analysis and insights.  For more deep dive into the application itself, please follow this link [THEORY.md](docs/THEORY.md)
 
 ## Implementation Overview
 
@@ -49,7 +49,7 @@ To run this project in a GitLab environment, follow these steps to import the re
 
 ### Configuring CI/CD Environment Variables
 
-After importing your project, you need to configure the CI/CD environment variables to match the project's requirements.
+After importing your project, you need to configure the CI/CD environment variables to match the project's requirements. A Detailed breakdopwn of the variables and what they are used for are here [PIPELINE.md](docs/PIPELINE.md)
 
 1. **Navigate to CI/CD Settings**:
     - Go to your project's homepage in GitLab.
