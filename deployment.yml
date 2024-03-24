@@ -20,13 +20,6 @@ spec:
         ports:
         - containerPort: 5000
         env:
-        - name: AMAZON_USERNAME
-          value: "${AMAZON_USERNAME}"
-        - name: AMAZON_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: amazon-secret
-              key: AMAZON_PASSWORD
         - name: TEMPORAL_HOST
           value: "${TEMPORAL_HOST}"
         - name: TEMPORAL_PORT
@@ -44,6 +37,16 @@ spec:
             secretKeyRef:
               name: openai-api-key-secret
               key: OPENAI_API_KEY
+        - name: AMAZON_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: amazon-username-secret
+              key: AMAZON_USERNAME
+        - name: AMAZON_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: amazon-password-secret
+              key: AMAZON_PASSWORD
 ---
 apiVersion: v1
 kind: Service

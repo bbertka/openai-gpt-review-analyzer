@@ -70,7 +70,7 @@ After importing your project, you need to configure the CI/CD environment variab
     - Click **Add Variable** to save each one.
 
 3. **Refer to the Provided Screenshot for Reference**:
-    - To ensure you have all the necessary environment variables configured, please refer to the screenshot provided (Note: Since I cannot directly show or access files, please ensure to link or attach the screenshot appropriately within your GitLab repository or README document).
+    - To ensure you have all the necessary environment variables configured, please refer to the screenshot:
 
 ![Gitlab Variables](docs/images/pipeline_variables.jpg)
 
