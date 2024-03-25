@@ -54,6 +54,7 @@ build-amd64:
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" $DOCKER_REGISTRY --password-stdin
     - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
     - docker buildx create --use
+    - echo "Building: $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:$DOCKER_BASE_TAG"
   script:
     - >
       docker buildx build
@@ -61,8 +62,6 @@ build-amd64:
       -t $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:$DOCKER_BASE_TAG
       -f $DOCKER_FILE
       --push .
-  only:
-    - release
 
 build-arm64:
   stage: build
