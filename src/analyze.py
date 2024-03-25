@@ -11,23 +11,25 @@ logger = logging.getLogger(__name__)
 
 @activity.defn
 async def sentimentOpenAI(review_text):
-	"""
-	Analyzes the sentiment of the given review text using OpenAI's GPT model.
-	"""
-	client = OpenAI(api_key=OPENAI_API_KEY)
-	try:
+        """
+        Analyzes the sentiment of the given review text using OpenAI's GPT model.
+        """
+        client = OpenAI(api_key=OPENAI_API_KEY)
+        try:
                 chat_completion = client.chat.completions.create(
-                messages=[{
-                    "role": "system", "content": "You are a helpful assistant",
-                    "role": "user", "content": f"What is the sentiment of this review? Please give me a one word response of either Good, Bad, or Neutral.\n\nReview:\n{review_text}",
-                }],
-                model="gpt-3.5-turbo", #for cost savings
+                    messages=[
+                            {
+                                    "role": "system", "content": "You are a helpful assistant",
+                                    "role": "user", "content": f"What is the sentiment of this review? Please give me a one word response of either Good, Bad, or Neutral.\n\nReview:\n{review_text}",
+                            }
+                    ],
+                    model="gpt-3.5-turbo", #for cost savings
                 )
-	        sentiment_result = chat_completion.choices[0].message.content.strip()
+                sentiment_result = chat_completion.choices[0].message.content.strip()
                 return sentiment_result
-	except Exception as e:
-		print(f"Error analyzing sentiment: {e}")
-		return None
+        except Exception as e:
+                print(f"Error analyzing sentiment: {e}")
+                return None
 
 
 @activity.defn
