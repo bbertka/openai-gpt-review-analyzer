@@ -31,7 +31,6 @@ async def sentimentOpenAI(review_text):
                 print(f"Error analyzing sentiment: {e}")
                 return None
 
-
 @activity.defn
 async def sentimentTextBlob(text):
 	"""
