@@ -32,17 +32,13 @@ local-test:
         echo "Test passed: Both 'result' and 'verdict' are present and not null."
       fi
   only:
-    - dev
-    - /^feature\/.*$/
+    - main
 
 sast:
   stage: scan
   variables:
     SAST_EXCLUDED_PATHS: "docs/, test/"
   allow_failure: true
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "dev"'
-    - if: '$CI_COMMIT_BRANCH =~ /^feature\/.*$/'
 
 build-amd64:
   stage: build
@@ -62,7 +58,7 @@ build-amd64:
       -f $DOCKER_FILE
       --push .
   only:
-    - release
+    - main
 
 build-arm64:
   stage: build
@@ -82,7 +78,7 @@ build-arm64:
       -f $DOCKER_FILE
       --push .
   only:
-    - release
+    - main
 
 deploy-k3s:
   stage: deploy
