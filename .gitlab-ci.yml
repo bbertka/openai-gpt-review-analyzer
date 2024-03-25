@@ -32,13 +32,17 @@ local-test:
         echo "Test passed: Both 'result' and 'verdict' are present and not null."
       fi
   only:
-    - main
+    - dev
+    - /^feature\/.*$/
 
 sast:
   stage: scan
   variables:
     SAST_EXCLUDED_PATHS: "docs/, test/"
   allow_failure: true
+  only:
+    - dev
+    - /^feature\/.*$/
 
 build-amd64:
   stage: build
@@ -58,7 +62,7 @@ build-amd64:
       -f $DOCKER_FILE
       --push .
   only:
-    - main
+    - release
 
 build-arm64:
   stage: build
@@ -78,7 +82,7 @@ build-arm64:
       -f $DOCKER_FILE
       --push .
   only:
-    - main
+    - release
 
 deploy-k3s:
   stage: deploy
