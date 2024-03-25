@@ -40,6 +40,7 @@ sast:
   variables:
     SAST_EXCLUDED_PATHS: "docs/, test/"
   allow_failure: true
+  only:
     - dev
     - /^feature\/.*$/
 
