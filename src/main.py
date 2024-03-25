@@ -3,6 +3,7 @@
 from temporalio import workflow
 from temporalio.client import Client
 from temporalio.worker import Worker
+from temporalio.common import RetryPolicy
 from datetime import timedelta
 import uuid, time, os
 import logging

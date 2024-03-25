@@ -1,6 +1,5 @@
 from textblob import TextBlob
 from temporalio import activity
-from temporalio.common import RetryPolicy
 import redis, json, textwrap
 import logging
 from openai import OpenAI
