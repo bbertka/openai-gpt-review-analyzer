@@ -19,7 +19,7 @@ async def sentimentOpenAI(review_text):
 		chat_completion = client.chat.completions.create(
             messages=[
                 {
-                    "role": "system", "content": "You are a helpful assistant. You will provide only a one word reponse to the question.",
+                    "role": "system", "content": "You are a helpful assistant",
                     "role": "user", "content": f"What is the sentiment of this review? Please give me a one word response of either Good, Bad, or Neutral.\n\nReview:\n{review_text}",
                 }
             ],
