@@ -3,7 +3,6 @@
 from temporalio import workflow
 from temporalio.client import Client
 from temporalio.worker import Worker
-from temporalio.common import RetryPolicy
 from datetime import timedelta
 import uuid, time, os
 import logging
@@ -31,24 +30,12 @@ class ScraperWorkflow:
             scraper.scrape,
             item,
             start_to_close_timeout=timedelta(seconds=20),
-            retry_policy=RetryPolicy(
-                backoff_coefficient=2.0,
-                maximum_attempts=2,
-                initial_interval=timedelta(seconds=1),
-                maximum_interval=timedelta(seconds=2),
-            ),
         )
 
         result,verdict =  await workflow.execute_activity(
             analyzer.analyze,
             itemkeys,
             start_to_close_timeout=timedelta(seconds=20),
-            retry_policy=RetryPolicy(
-                backoff_coefficient=2.0,
-                maximum_attempts=2,
-                initial_interval=timedelta(seconds=1),
-                maximum_interval=timedelta(seconds=2),
-            ),
         )
         
         return result, verdict
