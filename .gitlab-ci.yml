@@ -61,6 +61,8 @@ build-amd64:
       -t $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:$DOCKER_BASE_TAG
       -f $DOCKER_FILE
       --push .
+  only:
+    - release
 
 build-arm64:
   stage: build
