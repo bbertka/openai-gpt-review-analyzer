@@ -63,7 +63,7 @@ build-amd64:
       -f $DOCKER_FILE
       --push .
   only:
-    - release
+    - main
 
 build-arm64:
   stage: build
@@ -83,7 +83,7 @@ build-arm64:
       -f $DOCKER_FILE
       --push .
   only:
-    - release
+    - main
 
 deploy-k3s:
   stage: deploy
