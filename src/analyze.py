@@ -11,25 +11,25 @@ logger = logging.getLogger(__name__)
 
 @activity.defn
 async def sentimentOpenAI(review_text):
-	"""
-	Analyzes the sentiment of the given review text using OpenAI's GPT model.
-	"""
-	client = OpenAI(api_key=OPENAI_API_KEY)
-	try:
-		chat_completion = client.chat.completions.create(
-            messages=[
-                {
-                    "role": "system", "content": "You are a helpful assistant",
-                    "role": "user", "content": f"What is the sentiment of this review? Please give me a one word response of either Good, Bad, or Neutral.\n\nReview:\n{review_text}",
-                }
-            ],
-            model="gpt-3.5-turbo", #for cost savings
-        )
-		sentiment_result = chat_completion.choices[0].message.content.strip()
-		return sentiment_result
-	except Exception as e:
-		print(f"Error analyzing sentiment: {e}")
-		return None
+        """
+        Analyzes the sentiment of the given review text using OpenAI's GPT model.
+        """
+        client = OpenAI(api_key=OPENAI_API_KEY)
+        try:
+                chat_completion = client.chat.completions.create(
+                    messages=[
+                            {
+                                    "role": "system", "content": "You are a helpful assistant",
+                                    "role": "user", "content": f"What is the sentiment of this review? Please give me a one word response of either Good, Bad, or Neutral.\n\nReview:\n{review_text}",
+                            }
+                    ],
+                    model="gpt-3.5-turbo", #for cost savings
+                )
+                sentiment_result = chat_completion.choices[0].message.content.strip()
+                return sentiment_result
+        except Exception as e:
+                print(f"Error analyzing sentiment: {e}")
+                return None
 
 
 @activity.defn
@@ -115,26 +115,31 @@ async def interprete(rating):
 
 @activity.defn
 async def analyze(itemkeys):
-	#activity.logger.info("Analyze activity with len(itemkeys) %d" % len(itemkeys))
-	r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB, decode_responses=True)
-	i = 1
-	total = 0
-	for key in itemkeys:
-		retrieved_value_str = r.get(key)
-		retrieved_data = json.loads(retrieved_value_str)
-		rating = retrieved_data['star']
-		title = retrieved_data['title']
-		content = retrieved_data['content']
-		logger.info("Item: %s, Review: %s, %s, %s" % (key, rating, title, textwrap.shorten(content, width=128)))
-		stars =  await star_rating(rating)
-		title =  await sentimentTextBlob(title)
-		content = await sentimentOpenAI(content)
-		ratings = [stars, title, content]
-		rating = await quantify(ratings)
-		verdict = await interprete(rating)
-		logger.info("Item: %s, Computed weighted review vector: %s, as: %s" % (key, ratings, verdict) )
-		total = total + rating
-		i = i+1
-	result = float(total/i)
-	verdict = await interprete(result)
-	return result, verdict
+        #activity.logger.info("Analyze activity with len(itemkeys) %d" % len(itemkeys))
+        r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB, decode_responses=True)
+        i = 1
+        total = 0
+        try:
+                for key in itemkeys:
+                        retrieved_value_str = r.get(key)
+                        retrieved_data = json.loads(retrieved_value_str)
+                        rating = retrieved_data['star']
+                        title = retrieved_data['title']
+                        content = retrieved_data['content']
+                        logger.info("Item: %s, Review: %s, %s, %s" % (key, rating, title, textwrap.shorten(content, width=128)))
+                        stars =  await star_rating(rating)
+                        title =  await sentimentTextBlob(title)
+                        content = await sentimentOpenAI(content)
+                        ratings = [stars, title, content]
+                        rating = await quantify(ratings)
+                        verdict = await interprete(rating)
+                        logger.info("Item: %s, Computed weighted review vector: %s, as: %s" % (key, ratings, verdict) )
+                        total = total + rating
+                        i = i+1
+                result = float(total/i)
+                verdict = await interprete(result)
+        except Exception as e:
+                result = 0.0
+                verdict = "Bad"
+                return result, verdict
+        return result, verdict
