@@ -48,7 +48,6 @@ build-amd64:
     - name: docker:dind
       alias: docker
   before_script:
-    - echo "Registry $DOCKER_REGISTRY, Image Name $DOCKER_IMAGE_NAME, Tag $DOCKER_BASE_TAG, Dockerfile $DOCKER_FILE"
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" $DOCKER_REGISTRY --password-stdin
     - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
     - docker buildx create --use
@@ -60,7 +59,7 @@ build-amd64:
       -f $DOCKER_FILE
       --push .
   only:
-    - release
+    - main
 
 build-arm64:
   stage: build
@@ -80,7 +79,7 @@ build-arm64:
       -f $DOCKER_FILE
       --push .
   only:
-    - release
+    - main
 
 deploy-k3s:
   stage: deploy
