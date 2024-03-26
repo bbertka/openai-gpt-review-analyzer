@@ -41,8 +41,7 @@ sast:
     SAST_EXCLUDED_PATHS: "docs/, test/"
   allow_failure: true
   rules:
-    - if: '$CI_COMMIT_BRANCH == "dev"'
-    - if: '$CI_COMMIT_BRANCH =~ /^feature\/.*$/'
+    - if: '$CI_COMMIT_BRANCH == "main"'
 
 build-amd64:
   stage: build
