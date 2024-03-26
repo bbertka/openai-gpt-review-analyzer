@@ -115,31 +115,31 @@ async def interprete(rating):
 
 @activity.defn
 async def analyze(itemkeys):
-	#activity.logger.info("Analyze activity with len(itemkeys) %d" % len(itemkeys))
-	r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB, decode_responses=True)
-	i = 1
-	total = 0
+        #activity.logger.info("Analyze activity with len(itemkeys) %d" % len(itemkeys))
+        r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB, decode_responses=True)
+        i = 1
+        total = 0
         try:
                 for key in itemkeys:
-		        retrieved_value_str = r.get(key)
-		        retrieved_data = json.loads(retrieved_value_str)
-		        rating = retrieved_data['star']
-		        title = retrieved_data['title']
-		        content = retrieved_data['content']
-		        logger.info("Item: %s, Review: %s, %s, %s" % (key, rating, title, textwrap.shorten(content, width=128)))
-		        stars =  await star_rating(rating)
-		        title =  await sentimentTextBlob(title)
-		        content = await sentimentOpenAI(content)
-		        ratings = [stars, title, content]
-		        rating = await quantify(ratings)
-		        verdict = await interprete(rating)
-		        logger.info("Item: %s, Computed weighted review vector: %s, as: %s" % (key, ratings, verdict) )
-		        total = total + rating
-		        i = i+1
-	        result = float(total/i)
-	        verdict = await interprete(result)
+                        retrieved_value_str = r.get(key)
+                        retrieved_data = json.loads(retrieved_value_str)
+                        rating = retrieved_data['star']
+                        title = retrieved_data['title']
+                        content = retrieved_data['content']
+                        logger.info("Item: %s, Review: %s, %s, %s" % (key, rating, title, textwrap.shorten(content, width=128)))
+                        stars =  await star_rating(rating)
+                        title =  await sentimentTextBlob(title)
+                        content = await sentimentOpenAI(content)
+                        ratings = [stars, title, content]
+                        rating = await quantify(ratings)
+                        verdict = await interprete(rating)
+                        logger.info("Item: %s, Computed weighted review vector: %s, as: %s" % (key, ratings, verdict) )
+                        total = total + rating
+                        i = i+1
+                result = float(total/i)
+                verdict = await interprete(result)
         except Exception as e:
                 result = 0.0
                 verdict = "Bad"
                 return result, verdict
-	return result, verdict
+        return result, verdict
