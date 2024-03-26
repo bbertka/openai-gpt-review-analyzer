@@ -6,13 +6,13 @@ git fetch origin
 # Loop through all local branches
 for branch in $(git for-each-ref --format='%(refname:short)' refs/heads/); do
   echo "Processing $branch..."
-  
+
   # Checkout the branch
   git checkout "$branch"
-  
+
   # Pull latest changes from GitLab (origin)
   git pull origin "$branch"
-  
+
   # Push the branch to GitHub
   git push github "$branch"
 done
